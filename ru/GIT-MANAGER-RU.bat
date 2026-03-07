@@ -95,7 +95,7 @@ if exist "%CONFIG_FILE%" (
                 set "repo_name_!count!=%%a"
                 set "repo_path_!count!=%%b"
                 call :GET_REPO_STATUS "%%b" status_!count!
-                echo !status_!count!! %GREEN%!count!. %BOLD%%%a%RESET% - %CYAN%%%b%RESET% !branch_!count!!
+                echo !status_! %GREEN%!count!. %BOLD%%%a%RESET% - %CYAN%%%b%RESET% !branch_!!!
             )
         )
     )
