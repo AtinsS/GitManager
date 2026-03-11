@@ -481,21 +481,41 @@ set "repo_to_add=%~1"
 :: Проверяем есть ли группы
 if not exist "%GROUPS_FILE%" (
     echo %YELLOW%Нет созданных групп. Хотите создать новую?%RESET%
-    set /p "create_new=%YELLOW%[д/н]: %RESET%"
-    if /i "!create_new!"=="д" (
+    set /p "create_new=%YELLOW%[y/n]: %RESET%"
+    if /i "!create_new!"=="y" (
         call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
-    ) else (
+    ) else if /i "!create_new!"=="n" (
+        call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+    )
+    goto :eof
+) else (
+    :: Проверяем, есть ли вообще группы в файле (может быть пустой файл)
+    set "group_exists=0"
+    for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
+        if not "%%a"=="" set "group_exists=1"
+    )
+    
+    if !group_exists!==0 (
+        echo %YELLOW%Нет созданных групп. Хотите создать новую?%RESET%
+        set /p "create_new=%YELLOW%[y/n]: %RESET%"
+        if /i "!create_new!"=="y" (
+            call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+        ) else if /i "!create_new!"=="n" (
+            call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+        )
         goto :eof
     )
-) else (
+    
     :: Показываем существующие группы
     echo.
     echo %BOLD%%WHITE%Выберите группу:%RESET%
     set group_count=0
     for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
-        set /a group_count+=1
-        set "group_name_add_!group_count!=%%a"
-        echo %GREEN%!group_count!.%RESET% %%a
+        if not "%%a"=="" (
+            set /a group_count+=1
+            set "group_name_add_!group_count!=%%a"
+            echo %GREEN%!group_count!.%RESET% %%a
+        )
     )
     echo %GREEN%0.%RESET% Создать новую группу
     
@@ -513,7 +533,12 @@ if not exist "%GROUPS_FILE%" (
             type nul > "!temp_groups!"
             for /f "usebackq tokens=1,* delims=;" %%a in ("%GROUPS_FILE%") do (
                 if "%%a"=="!selected_group!" (
-                    echo %%a;%%b !repo_to_add!>> "!temp_groups!"
+                    :: Проверяем, не пустой ли список репозиториев
+                    if "%%b"=="" (
+                        echo %%a;!repo_to_add!>> "!temp_groups!"
+                    ) else (
+                        echo %%a;%%b !repo_to_add!>> "!temp_groups!"
+                    )
                 ) else (
                     echo %%a;%%b>> "!temp_groups!"
                 )
@@ -523,6 +548,32 @@ if not exist "%GROUPS_FILE%" (
         echo %GREEN%Репозиторий "%repo_to_add%" добавлен в группу "%selected_group%"%RESET%
     )
 )
+goto :eof
+
+:CREATE_GROUP_FROM_ADD
+set "repo_to_add=%~1"
+echo.
+set /p "new_group=%GREEN%Введите название новой группы: %RESET%"
+
+if "!new_group!"=="" (
+    echo %RED%Название не может быть пустым!%RESET%
+    pause
+    goto :eof
+)
+
+:: Проверяем, существует ли уже такая группа
+if exist "%GROUPS_FILE%" (
+    findstr /b "!new_group!;" "%GROUPS_FILE%" >nul 2>&1
+    if not errorlevel 1 (
+        echo %RED%Группа с таким именем уже существует!%RESET%
+        pause
+        goto :eof
+    )
+)
+
+:: Создаем группу и добавляем репозиторий
+echo !new_group!;!repo_to_add!>> "%GROUPS_FILE%"
+echo %GREEN%Группа "%new_group%" создана и репозиторий добавлен!%RESET%
 goto :eof
 
 :CREATE_GROUP_FROM_ADD
@@ -810,11 +861,19 @@ echo %BOLD%%WHITE%Существующие группы:%RESET%
 set group_count=0
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
-        set /a group_count+=1
-        set "group_name_!group_count!=%%a"
-        echo %GREEN%!group_count!.%RESET% %%a
+        if not "%%a"=="" (
+            set /a group_count+=1
+            set "group_name_!group_count!=%%a"
+            echo %GREEN%!group_count!.%RESET% %%a
+        )
     )
 ) else (
+    echo %YELLOW%Нет созданных групп%RESET%
+    pause
+    goto MANAGE_GROUPS
+)
+
+if !group_count!==0 (
     echo %YELLOW%Нет созданных групп%RESET%
     pause
     goto MANAGE_GROUPS
@@ -856,7 +915,12 @@ type nul > "!temp_groups!"
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1,* delims=;" %%a in ("%GROUPS_FILE%") do (
         if "%%a"=="!selected_group!" (
-            echo %%a;%%b !selected_repo!>> "!temp_groups!"
+            :: Проверяем, не пустой ли список репозиториев
+            if "%%b"=="" (
+                echo %%a;!selected_repo!>> "!temp_groups!"
+            ) else (
+                echo %%a;%%b !selected_repo!>> "!temp_groups!"
+            )
         ) else (
             echo %%a;%%b>> "!temp_groups!"
         )
