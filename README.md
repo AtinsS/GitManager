@@ -45,56 +45,55 @@ GIT-MANAGER.BAT
 
 ### Main Menu:
 ```
-╔══════════════════════════════════════════════════════════╗
-║              GIT REPOSITORY MANAGER                      ║
-╚══════════════════════════════════════════════════════════╝
-=====================By AtinsS==============================
+🚀 GIT MANAGER - Repository Management
+═══════════════════ By AtinsS ═══════════════════
 
-Saved Repositories:
-------------------------
+    Repository list:
 
-[Group: newGroup]
- 1. NewRepo - D:\Dev\MyProgects\MyProj NameRepo
- 2. NewRepo2 - D:\Dev\MyProgects2\MyProj2 NameRepo2
-    
-[Group: newGroupSecond]
- 1. NewRepoSec - D:\Dev\MyProgectsSec\MyProjSec NameRepo
- 2. NewRepoSec2 - D:\Dev\MyProgectsSec2\MyProjSec2 NameRepoSec2
+    📁 Group:JS
+    1.  JS-Learn
+    2.  JS-FINAL
+    3.  Crop-IMG
 
-Actions:
-========
-Enter repository number (1-1)
-C. Clone new repository
-A. Add existing local repository
-U. Update all repositories
-G. Manage groups
-D. Delete repository from list
-S. Settings
-X. Exit
+    📁 Group: OTHER
+    4.  GIT-MANAGER
 
-Your choice:
+    📁 Group: Vault
+    5.  Vault
+
+    Action menu:
+    1-5: Select repository by number
+    C: Clone new repository
+    A: Add existing local repository
+    U: Update all repositories
+    G: Manage groups
+    D: Delete repository from list
+    S: Settings
+    X: Exit
+
+    ⚡ Your choice:
 ```
 
 ### Repository Menu:
 ```
-════════════════════════════════════════════════════════════
-      Repository: NewRepo
-      Path: D:\Dev\MyProgects\MyProj NameRepo
-      Branch: main  Status: changes detected
+ ════════════════════════════════════════════════════════════
+    Repository: JS-Learn    Branch: dev
+    Status: ✅ clean
 ════════════════════════════════════════════════════════════
 
-1. Git status (check state)
-2. Git pull (update)
-3. Git add + commit (with comment)
-4. Git push (send)
-5. Quick commit + push (auto-comment)
-6. View history (git log)
-7. Create branch
-8. Switch branch
-9. Auto-commits (every N minutes)
-10. Return to main menu
+    1. Git status (check state)
+    2. Git pull (update)
+    3. Git add + commit (with comment)
+    4. Git push (send)
+    5. Quick commit + push (auto-comment)
+    6. View history (git log)
+    7. Create branch
+    8. Switch branch
+    9. Auto-commits (every N minutes)
+    0. Return to main menu
 
-Select action:
+    ⚡ Choose action:
+
 ```
 
 ___
