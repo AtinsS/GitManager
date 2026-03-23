@@ -25,23 +25,20 @@ set "TEMP_FILE=%SCRIPT_DIR%\temp.cfg"
 
 :MENU
 cls
-echo %BOLD%%CYAN%╔══════════════════════════════════════════════════════════╗%RESET%
-echo %BOLD%%CYAN%║              GIT REPOSITORY MANAGER                      ║%RESET%
-echo %BOLD%%CYAN%╚══════════════════════════════════════════════════════════╝%RESET%
-echo %YELLOW%=====================By AtinsS==============================%RESET%
+echo %BOLD%%CYAN%    🚀 GIT MANAGER - Repository Management    %RESET%
+echo %YELLOW%    ═══════════════════ By AtinsS ═══════════════════%RESET%
 echo.
 
-:: Load saved repositories list
+:: Load the list of saved repositories
 set count=0
 if exist "%CONFIG_FILE%" (
-    echo %BOLD%%WHITE%Saved repositories:%RESET%
-    echo %BLUE%------------------------%RESET%
+    echo %BOLD%%WHITE%    Repository list:%RESET%
     
     :: First show by groups
     if exist "%GROUPS_FILE%" (
         for /f "usebackq tokens=1,* delims=;" %%a in ("%GROUPS_FILE%") do (
             echo.
-            echo %BOLD%%MAGENTA%[Group: %%a]%RESET%
+            echo %BOLD%%MAGENTA%    📁 Group: %%a%RESET%
             set "group_repos=%%b"
             if not "!group_repos!"=="" (
                 for %%r in (!group_repos!) do (
@@ -52,21 +49,21 @@ if exist "%CONFIG_FILE%" (
                             set "repo_name_!count!=%%x"
                             set "repo_path_!count!=%%y"
                             call :GET_REPO_STATUS "%%y" status_!count!
-                            echo !status_! %GREEN%!count!. %BOLD%%%x%RESET% - %CYAN%%%y%RESET% !branch_!
+                            echo     %GREEN%!count!.%RESET% !status_! %%x !branch_!
                             set "repo_found=1"
                         )
                     )
                     if !repo_found!==0 (
-                        echo %RED%  ⚠ Repository "%%r" not found in list%RESET%
+                        echo     %RED%⚠ Repository "%%r" not found%RESET%
                     )
                 )
             ) else (
-                echo %YELLOW%  group is empty%RESET%
+                echo     %YELLOW%group is empty%RESET%
             )
         )
     )
     
-    :: Show repositories without group
+    :: Show repositories without a group
     set "temp_count=0"
     for /f "usebackq tokens=1,* delims=;" %%a in ("%CONFIG_FILE%") do (
         set "found=0"
@@ -82,7 +79,7 @@ if exist "%CONFIG_FILE%" (
     
     if !temp_count! gtr 0 (
         echo.
-        echo %BOLD%%YELLOW%[No Group]%RESET%
+        echo %BOLD%%YELLOW%    📁 Without group:%RESET%
         for /f "usebackq tokens=1,* delims=;" %%a in ("%CONFIG_FILE%") do (
             set "found=0"
             if exist "%GROUPS_FILE%" (
@@ -95,29 +92,28 @@ if exist "%CONFIG_FILE%" (
                 set "repo_name_!count!=%%a"
                 set "repo_path_!count!=%%b"
                 call :GET_REPO_STATUS "%%b" status_!count!
-                echo !status_!count!! %GREEN%!count!. %BOLD%%%a%RESET% - %CYAN%%%b%RESET% !branch_!count!!
+                echo     %GREEN%!count!.%RESET% !status_! %%a !branch_!
             )
         )
     )
 ) else (
-    echo %YELLOW%Repository list is empty%RESET%
+    echo %YELLOW%    Repository list is empty%RESET%
 )
 
 echo.
-echo %BOLD%%WHITE%Actions:%RESET%
-echo %BLUE%========%RESET%
-if %count% gtr 0 echo %GREEN%Enter repository number (1-%count%)%RESET%
-echo %CYAN%C.%RESET% Clone new repository
-echo %CYAN%A.%RESET% Add existing local repository
-echo %CYAN%U.%RESET% Update all repositories
-echo %CYAN%G.%RESET% Manage groups
-echo %CYAN%D.%RESET% Delete repository from list
-echo %CYAN%S.%RESET% Settings
-echo %RED%X.%RESET% Exit
+echo %BOLD%%WHITE%    Action menu:%RESET%
+if %count% gtr 0 echo %GREEN%    1-%count%:%RESET% Select repository by number
+echo %CYAN%    C:%RESET% Clone new repository
+echo %CYAN%    A:%RESET% Add existing local repository
+echo %CYAN%    U:%RESET% Update all repositories
+echo %CYAN%    G:%RESET% Manage groups
+echo %CYAN%    D:%RESET% Delete repository from list
+echo %CYAN%    S:%RESET% Settings
+echo %RED%    X:%RESET% Exit
 echo.
-set /p "action=%BOLD%%WHITE%Your choice: %RESET%"
+set /p "action=%BOLD%%WHITE%    ⚡ Your choice: %RESET%"
 
-:: Check if number or letter
+:: Check if it's a number or letter
 set is_number=0
 echo %action%| findstr /r "^[0-9][0-9]*$" >nul 2>&1
 if not errorlevel 1 set is_number=1
@@ -128,7 +124,7 @@ if %is_number%==1 (
         call :SELECT_REPO
         goto MENU
     ) else (
-        echo %RED%Invalid number!%RESET%
+        echo %RED%    ❌ Invalid number!%RESET%
         pause
         goto MENU
     )
@@ -139,8 +135,8 @@ if %is_number%==1 (
     if /i "%action%"=="G" goto MANAGE_GROUPS
     if /i "%action%"=="D" goto DELETE_REPO
     if /i "%action%"=="S" goto SETTINGS
-    if /i "%action%"=="X" exit /b
-    echo %RED%Invalid choice!%RESET%
+    if /i "%action%"=="X" exit 
+    echo %RED%    ❌ Invalid choice!%RESET%
     pause
     goto MENU
 )
@@ -197,25 +193,25 @@ set "REPO_NAME=!repo_name_%repo_index%!"
 set "REPO_PATH=!repo_path_%repo_index%!"
 
 echo.
-echo %BOLD%%WHITE%Selected repository:%RESET% %GREEN%%REPO_NAME%%RESET%
-echo %BOLD%%WHITE%Path:%RESET% %CYAN%%REPO_PATH%%RESET%
+echo %BOLD%%WHITE%    Selected repository:%RESET% %GREEN%📁 %REPO_NAME%%RESET%
+echo %BOLD%%WHITE%    Path:%RESET% %CYAN%📌 %REPO_PATH%%RESET%
 
 :: Check if folder exists
 if not exist "%REPO_PATH%" (
     echo.
-    echo %RED%⚠ WARNING: Folder not found!%RESET%
+    echo %RED%    ⚠ WARNING: Folder not found!%RESET%
     echo.
-    echo %GREEN%1.%RESET% Clone again
-    echo %YELLOW%2.%RESET% Specify new path
-    echo %RED%3.%RESET% Return to menu
+    echo %GREEN%    1.%RESET% Clone again
+    echo %YELLOW%    2.%RESET% Specify new path
+    echo %RED%    3.%RESET% Return to menu
     echo.
-    set /p "fix=%BOLD%%WHITE%Choose action: %RESET%"
+    set /p "fix=%BOLD%%WHITE%    Choose action: %RESET%"
     
     if "!fix!"=="1" (
         call :CLONE_REPO_EXISTING "%REPO_NAME%" "%REPO_PATH%"
         goto :eof
     ) else if "!fix!"=="2" (
-        set /p "REPO_PATH=%YELLOW%New path: %RESET%"
+        set /p "REPO_PATH=%YELLOW%    New path: %RESET%"
         call :UPDATE_REPO_PATH "%REPO_NAME%" "!REPO_PATH!"
         cd /d "!REPO_PATH!" 2>nul
     ) else (
@@ -225,9 +221,9 @@ if not exist "%REPO_PATH%" (
     cd /d "%REPO_PATH%" 2>nul
 )
 
-:: Check if we successfully changed directory
+:: Check that we successfully changed directory
 if errorlevel 1 (
-    echo %RED%Error: Cannot navigate to folder!%RESET%
+    echo %RED%    ❌ Error: Cannot navigate to folder!%RESET%
     pause
     goto :eof
 )
@@ -235,7 +231,7 @@ if errorlevel 1 (
 :: Check if it's a git repository
 git status >nul 2>&1
 if errorlevel 1 (
-    echo %RED%Error: Folder is not a git repository!%RESET%
+    echo %RED%    ❌ Error: Folder is not a git repository!%RESET%
     pause
     goto :eof
 )
@@ -259,29 +255,28 @@ if "!current_branch!"=="" set "current_branch=unknown"
 :: Get status
 git status --porcelain | findstr . >nul 2>&1
 if errorlevel 1 (
-    set "repo_status=%GREEN%clean%RESET%"
+    set "repo_status=%GREEN%✅ clean%RESET%"
 ) else (
-    set "repo_status=%YELLOW%has changes%RESET%"
+    set "repo_status=%YELLOW%⚠ changes detected%RESET%"
 )
 
-echo %CYAN%════════════════════════════════════════════════════════════%RESET%
-echo %BOLD%%WHITE%      Repository:%RESET% %GREEN%%current_repo%%RESET%
-echo %BOLD%%WHITE%      Path:%RESET% %YELLOW%%cd%%RESET%
-echo %BOLD%%WHITE%      Branch:%RESET% %BLUE%!current_branch!%RESET%  %BOLD%%WHITE%Status:%RESET% !repo_status!
-echo %CYAN%════════════════════════════════════════════════════════════%RESET%
+echo %CYAN%    ════════════════════════════════════════════════════════════%RESET%
+echo %BOLD%%WHITE%    Repository:%RESET% %GREEN%%current_repo%%RESET%    %BOLD%%WHITE%Branch:%RESET% %BLUE%!current_branch!%RESET%
+echo %BOLD%%WHITE%    Status:%RESET% !repo_status!
+echo %CYAN%    ════════════════════════════════════════════════════════════%RESET%
 echo.
-echo %GREEN%1.%RESET% Git status (check state)
-echo %GREEN%2.%RESET% Git pull (update)
-echo %GREEN%3.%RESET% Git add + commit (with comment)
-echo %GREEN%4.%RESET% Git push (send)
-echo %GREEN%5.%RESET% Quick commit + push (auto-comment)
-echo %GREEN%6.%RESET% View history (git log)
-echo %GREEN%7.%RESET% Create branch
-echo %GREEN%8.%RESET% Switch branch
-echo %GREEN%9.%RESET% Auto-commits (every N minutes)
-echo %RED%0.%RESET% Return to main menu
+echo %GREEN%    1.%RESET% Git status (check state)
+echo %GREEN%    2.%RESET% Git pull (update)
+echo %GREEN%    3.%RESET% Git add + commit (with comment)
+echo %GREEN%    4.%RESET% Git push (send)
+echo %GREEN%    5.%RESET% Quick commit + push (auto-comment)
+echo %GREEN%    6.%RESET% View history (git log)
+echo %GREEN%    7.%RESET% Create branch
+echo %GREEN%    8.%RESET% Switch branch
+echo %GREEN%    9.%RESET% Auto-commits (every N minutes)
+echo %RED%    0.%RESET% Return to main menu
 echo.
-set /p "repo_action=%BOLD%%WHITE%Choose action: %RESET%"
+set /p "repo_action=%BOLD%%WHITE%    ⚡ Choose action: %RESET%"
 
 :: Check if scripts exist
 if not exist "%SCRIPT_DIR%\git-scripts" (
@@ -289,16 +284,21 @@ if not exist "%SCRIPT_DIR%\git-scripts" (
 )
 
 if "%repo_action%"=="1" (
+    cls
+    echo %BOLD%%CYAN%    === GIT STATUS ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\01-git-status.bat" (
         call "%SCRIPT_DIR%\git-scripts\01-git-status.bat" "%current_repo%"
     ) else (
-        echo %RED%Script not found!%RESET%
         git status
     )
     pause
     goto REPO_LOOP
 )
 if "%repo_action%"=="2" (
+    cls
+    echo %BOLD%%CYAN%    === GIT PULL ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\02-git-pull.bat" (
         call "%SCRIPT_DIR%\git-scripts\02-git-pull.bat" "%current_repo%"
     ) else (
@@ -308,16 +308,22 @@ if "%repo_action%"=="2" (
     goto REPO_LOOP
 )
 if "%repo_action%"=="3" (
+    cls
+    echo %BOLD%%CYAN%    === GIT COMMIT ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\03-git-commit.bat" (
         call "%SCRIPT_DIR%\git-scripts\03-git-commit.bat" "%current_repo%"
     ) else (
-        set /p "commit_msg=%YELLOW%Comment: %RESET%"
+        set /p "commit_msg=%YELLOW%    Comment: %RESET%"
         git add . && git commit -m "!commit_msg!"
     )
     pause
     goto REPO_LOOP
 )
 if "%repo_action%"=="4" (
+    cls
+    echo %BOLD%%CYAN%    === GIT PUSH ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\04-git-push.bat" (
         call "%SCRIPT_DIR%\git-scripts\04-git-push.bat" "%current_repo%"
     ) else (
@@ -327,6 +333,9 @@ if "%repo_action%"=="4" (
     goto REPO_LOOP
 )
 if "%repo_action%"=="5" (
+    cls
+    echo %BOLD%%CYAN%    === QUICK PUSH ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\05-git-quick-push.bat" (
         call "%SCRIPT_DIR%\git-scripts\05-git-quick-push.bat" "%current_repo%"
     ) else (
@@ -336,6 +345,9 @@ if "%repo_action%"=="5" (
     goto REPO_LOOP
 )
 if "%repo_action%"=="6" (
+    cls
+    echo %BOLD%%CYAN%    === GIT LOG ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\06-git-log.bat" (
         call "%SCRIPT_DIR%\git-scripts\06-git-log.bat" "%current_repo%"
     ) else (
@@ -345,48 +357,58 @@ if "%repo_action%"=="6" (
     goto REPO_LOOP
 )
 if "%repo_action%"=="7" (
+    cls
+    echo %BOLD%%CYAN%    === CREATE BRANCH ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\07-git-create-branch.bat" (
         call "%SCRIPT_DIR%\git-scripts\07-git-create-branch.bat" "%current_repo%"
     ) else (
-        set /p "branch_name=%YELLOW%Branch name: %RESET%"
+        set /p "branch_name=%YELLOW%    Branch name: %RESET%"
         git branch "!branch_name!"
     )
     pause
     goto REPO_LOOP
 )
 if "%repo_action%"=="8" (
+    cls
+    echo %BOLD%%CYAN%    === SWITCH BRANCH ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\08-git-switch-branch.bat" (
         call "%SCRIPT_DIR%\git-scripts\08-git-switch-branch.bat" "%current_repo%"
     ) else (
         git branch
-        set /p "branch_name=%YELLOW%Branch to switch to: %RESET%"
+        echo.
+        set /p "branch_name=%YELLOW%    Branch to switch to: %RESET%"
         git checkout "!branch_name!"
     )
     pause
     goto REPO_LOOP
 )
 if "%repo_action%"=="9" (
+    cls
+    echo %BOLD%%CYAN%    === AUTO-COMMITS ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\09-git-auto-commit.bat" (
         call "%SCRIPT_DIR%\git-scripts\09-git-auto-commit.bat" "%current_repo%"
     ) else (
-        echo %RED%Auto-commit script not found%RESET%
+        echo %RED%    ❌ Auto-commit script not found%RESET%
     )
     pause
     goto REPO_LOOP
 )
 if "%repo_action%"=="0" goto MENU
 
-echo %RED%Invalid choice!%RESET%
+echo %RED%    ❌ Invalid choice!%RESET%
 pause
 goto REPO_LOOP
 
 :CLONE_REPO
 cls
-echo %BOLD%%CYAN%=== CLONE REPOSITORY ===%RESET%
+echo %BOLD%%CYAN%    📥 CLONE REPOSITORY%RESET%
 echo.
-set /p "repo_name=%GREEN%Repository name (for saving): %RESET%"
-set /p "repo_url=%YELLOW%Repository URL (https://github.com/...): %RESET%"
-set /p "clone_path=%BLUE%Clone path (Enter - current folder): %RESET%"
+set /p "repo_name=%GREEN%    📦 Repository name: %RESET%"
+set /p "repo_url=%YELLOW%    🔗 Repository URL: %RESET%"
+set /p "clone_path=%BLUE%    📁 Path for cloning (Enter - current folder): %RESET%"
 
 if "!clone_path!"=="" set "clone_path=%cd%"
 if not exist "!clone_path!" mkdir "!clone_path!" 2>nul
@@ -394,24 +416,26 @@ if not exist "!clone_path!" mkdir "!clone_path!" 2>nul
 set "full_path=!clone_path!\!repo_name!"
 
 echo.
-echo %BOLD%Cloning %repo_name% from %repo_url% to %full_path%...%RESET%
+echo %BOLD%    ⏳ Cloning %repo_name% from %repo_url% to %full_path%...%RESET%
 git clone "%repo_url%" "%full_path%"
 
 if errorlevel 1 (
-    echo %RED%Clone error!%RESET%
+    echo %RED%    ❌ Cloning error!%RESET%
     pause
     goto MENU
 )
 
 echo %repo_name%;%full_path% >> "%CONFIG_FILE%"
-echo %GREEN%Repository successfully cloned and added to list!%RESET%
+echo %GREEN%    ✅ Repository successfully cloned and added to list!%RESET%
 
 :: Ask about group
 echo.
-echo %BOLD%%WHITE%Add repository to group?%RESET%
-set /p "add_to_group=%YELLOW%[y/n]: %RESET%"
+echo %BOLD%%WHITE%    Add to group:%RESET%
+set /p "add_to_group=%YELLOW%    Add repository to group? [y/n]: %RESET%"
 
 if /i "!add_to_group!"=="y" (
+    call :ADD_REPO_TO_GROUP "%repo_name%"
+) else if /i "!add_to_group!"=="yes" (
     call :ADD_REPO_TO_GROUP "%repo_name%"
 )
 
@@ -420,35 +444,35 @@ goto MENU
 
 :ADD_EXISTING
 cls
-echo %BOLD%%CYAN%=== ADD EXISTING REPOSITORY ===%RESET%
+echo %BOLD%%CYAN%    📂 ADD EXISTING REPOSITORY%RESET%
 echo.
-set /p "repo_name=%GREEN%Repository name: %RESET%"
-set /p "repo_path=%YELLOW%Full path to repository: %RESET%"
+set /p "repo_name=%GREEN%    📦 Repository name: %RESET%"
+set /p "repo_path=%YELLOW%    📁 Full path to repository: %RESET%"
 
 set "repo_path=%repo_path:"=%"
 
 if "!repo_path!"=="" (
-    echo %RED%Error: Path cannot be empty!%RESET%
+    echo %RED%    ❌ Error: Path cannot be empty!%RESET%
     pause
     goto MENU
 )
 
 if not exist "!repo_path!" (
-    echo %RED%Error: Folder not found!%RESET%
+    echo %RED%    ❌ Error: Folder not found!%RESET%
     pause
     goto MENU
 )
 
 pushd "!repo_path!" 2>nul
 if errorlevel 1 (
-    echo %RED%Error: Cannot navigate to folder!%RESET%
+    echo %RED%    ❌ Error: Cannot navigate to folder!%RESET%
     pause
     goto MENU
 )
 
 git status >nul 2>&1
 if errorlevel 1 (
-    echo %RED%Error: Folder is not a git repository!%RESET%
+    echo %RED%    ❌ Error: Folder is not a git repository!%RESET%
     popd
     pause
     goto MENU
@@ -457,14 +481,16 @@ popd
 
 :: Save to config
 echo %repo_name%;!repo_path! >> "%CONFIG_FILE%"
-echo %GREEN%Repository added to list!%RESET%
+echo %GREEN%    ✅ Repository added to list!%RESET%
 
 :: Ask about group
 echo.
-echo %BOLD%%WHITE%Add repository to group?%RESET%
-set /p "add_to_group=%YELLOW%[y/n]: %RESET%"
+echo %BOLD%%WHITE%    Add to group:%RESET%
+set /p "add_to_group=%YELLOW%    Add repository to group? [y/n]: %RESET%"
 
 if /i "!add_to_group!"=="y" (
+    call :ADD_REPO_TO_GROUP "%repo_name%"
+) else if /i "!add_to_group!"=="yes" (
     call :ADD_REPO_TO_GROUP "%repo_name%"
 )
 
@@ -476,27 +502,47 @@ set "repo_to_add=%~1"
 
 :: Check if there are groups
 if not exist "%GROUPS_FILE%" (
-    echo %YELLOW%No groups created. Create new group?%RESET%
-    set /p "create_new=%YELLOW%[y/n]: %RESET%"
+    echo %YELLOW%    ⚠ No groups created. Want to create a new one?%RESET%
+    set /p "create_new=%YELLOW%    [y/n]: %RESET%"
     if /i "!create_new!"=="y" (
         call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
-    ) else (
+    ) else if /i "!create_new!"=="yes" (
+        call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+    )
+    goto :eof
+) else (
+    :: Check if there are actually any groups in the file (might be empty file)
+    set "group_exists=0"
+    for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
+        if not "%%a"=="" set "group_exists=1"
+    )
+    
+    if !group_exists!==0 (
+        echo %YELLOW%    ⚠ No groups created. Want to create a new one?%RESET%
+        set /p "create_new=%YELLOW%    [y/n]: %RESET%"
+        if /i "!create_new!"=="y" (
+            call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+        ) else if /i "!create_new!"=="yes" (
+            call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+        )
         goto :eof
     )
-) else (
+    
     :: Show existing groups
     echo.
-    echo %BOLD%%WHITE%Select group:%RESET%
+    echo %BOLD%%WHITE%    Select group:%RESET%
     set group_count=0
     for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
-        set /a group_count+=1
-        set "group_name_add_!group_count!=%%a"
-        echo %GREEN%!group_count!.%RESET% %%a
+        if not "%%a"=="" (
+            set /a group_count+=1
+            set "group_name_add_!group_count!=%%a"
+            echo %GREEN%    !group_count!.%RESET% %%a
+        )
     )
-    echo %GREEN%0.%RESET% Create new group
+    echo %GREEN%    0.%RESET% Create new group
     
     echo.
-    set /p "group_choice=%BOLD%%WHITE%Your choice: %RESET%"
+    set /p "group_choice=%BOLD%%WHITE%    ⚡ Your choice: %RESET%"
     
     if "!group_choice!"=="0" (
         call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
@@ -509,14 +555,19 @@ if not exist "%GROUPS_FILE%" (
             type nul > "!temp_groups!"
             for /f "usebackq tokens=1,* delims=;" %%a in ("%GROUPS_FILE%") do (
                 if "%%a"=="!selected_group!" (
-                    echo %%a;%%b !repo_to_add!>> "!temp_groups!"
+                    :: Check if repository list is not empty
+                    if "%%b"=="" (
+                        echo %%a;!repo_to_add!>> "!temp_groups!"
+                    ) else (
+                        echo %%a;%%b !repo_to_add!>> "!temp_groups!"
+                    )
                 ) else (
                     echo %%a;%%b>> "!temp_groups!"
                 )
             )
             move /y "!temp_groups!" "%GROUPS_FILE%" >nul 2>&1
         )
-        echo %GREEN%Repository "%repo_to_add%" added to group "%selected_group%"%RESET%
+        echo %GREEN%    ✅ Repository "%repo_to_add%" added to group "%selected_group%"%RESET%
     )
 )
 goto :eof
@@ -524,10 +575,10 @@ goto :eof
 :CREATE_GROUP_FROM_ADD
 set "repo_to_add=%~1"
 echo.
-set /p "new_group=%GREEN%Enter new group name: %RESET%"
+set /p "new_group=%GREEN%    📝 Enter new group name: %RESET%"
 
 if "!new_group!"=="" (
-    echo %RED%Name cannot be empty!%RESET%
+    echo %RED%    ❌ Name cannot be empty!%RESET%
     pause
     goto :eof
 )
@@ -536,7 +587,7 @@ if "!new_group!"=="" (
 if exist "%GROUPS_FILE%" (
     findstr /b "!new_group!;" "%GROUPS_FILE%" >nul 2>&1
     if not errorlevel 1 (
-        echo %RED%Group with this name already exists!%RESET%
+        echo %RED%    ❌ Group with this name already exists!%RESET%
         pause
         goto :eof
     )
@@ -544,49 +595,50 @@ if exist "%GROUPS_FILE%" (
 
 :: Create group and add repository
 echo !new_group!;%repo_to_add%>> "%GROUPS_FILE%"
-echo %GREEN%Group "%new_group%" created and repository added!%RESET%
+echo %GREEN%    ✅ Group "%new_group%" created and repository added!%RESET%
+pause
 goto :eof
 
 :UPDATE_ALL
 cls
-echo %BOLD%%CYAN%=== UPDATE ALL REPOSITORIES ===%RESET%
+echo %BOLD%%CYAN%    🔄 UPDATE ALL REPOSITORIES%RESET%
 echo.
 
 if not exist "%CONFIG_FILE%" (
-    echo %RED%No saved repositories!%RESET%
+    echo %RED%    ❌ No saved repositories!%RESET%
     pause
     goto MENU
 )
 
 for /f "usebackq tokens=1,2 delims=;" %%a in ("%CONFIG_FILE%") do (
     echo.
-    echo %BOLD%%BLUE%===== Processing:%RESET% %GREEN%%%a%RESET% %BLUE%=====%RESET%
+    echo %BOLD%%BLUE%    [%%a]%RESET%
     if exist "%%b" (
         pushd "%%b" 2>nul
         if not errorlevel 1 (
-            echo %YELLOW%Updating...%RESET%
+            echo %YELLOW%    Updating...%RESET%
             git pull
             popd
         ) else (
-            echo %RED%⚠ Cannot navigate to folder%RESET%
+            echo %RED%    ⚠ Cannot navigate to folder%RESET%
         )
     ) else (
-        echo %RED%⚠ Folder not found: %%b%RESET%
+        echo %RED%    ⚠ Folder not found: %%b%RESET%
     )
 )
 
 echo.
-echo %GREEN%Update completed!%RESET%
+echo %GREEN%    ✅ Update completed!%RESET%
 pause
 goto MENU
 
 :DELETE_REPO
 cls
-echo %BOLD%%CYAN%=== DELETE REPOSITORY FROM LIST ===%RESET%
+echo %BOLD%%CYAN%    🗑️ DELETE REPOSITORY FROM LIST%RESET%
 echo.
 
 if not exist "%CONFIG_FILE%" (
-    echo %RED%No repositories to delete!%RESET%
+    echo %RED%    ❌ No repositories to delete!%RESET%
     pause
     goto MENU
 )
@@ -598,7 +650,7 @@ for /f "usebackq tokens=1,2 delims=;" %%a in ("%CONFIG_FILE%") do (
 )
 
 echo.
-set /p "del_num=%BOLD%%RED%Repository number to delete: %RESET%"
+set /p "del_num=%BOLD%%RED%    ⚠ Number of repository to delete: %RESET%"
 
 set skip_line=%del_num%
 set current=0
@@ -613,32 +665,31 @@ if exist "%CONFIG_FILE%" (
     move /y "%TEMP_FILE%" "%CONFIG_FILE%" >nul 2>nul
 )
 
-echo %GREEN%Repository removed from list!%RESET%
+echo %GREEN%    ✅ Repository deleted from list!%RESET%
 pause
 goto MENU
 
 :SETTINGS
 cls
-echo %BOLD%%CYAN%=== SETTINGS ===%RESET%
+echo %BOLD%%CYAN%    ⚙️ SETTINGS%RESET%
 echo.
-echo %GREEN%1.%RESET% Show all repositories
-echo %YELLOW%2.%RESET% Clear list
-echo %BLUE%3.%RESET% Edit paths manually
-echo %MAGENTA%4.%RESET% Auto-repair configs
-echo %RED%5.%RESET% Back
+echo %GREEN%    1.%RESET% Show all repositories
+echo %YELLOW%    2.%RESET% Clear list
+echo %BLUE%    3.%RESET% Edit paths manually
+echo %MAGENTA%    4.%RESET% Auto-fix configs
+echo %RED%    5.%RESET% Back
 echo.
-set /p "sett=%BOLD%%WHITE%Choose: %RESET%"
+set /p "sett=%BOLD%%WHITE%    ⚡ Choose: %RESET%"
 
 if "%sett%"=="1" (
     cls
-    echo %BOLD%%WHITE%Repository list:%RESET%
-    echo %BLUE%===================%RESET%
+    echo %BOLD%%WHITE%    Repository list:%RESET%
     if exist "%CONFIG_FILE%" (
         for /f "usebackq tokens=1,2 delims=;" %%a in ("%CONFIG_FILE%") do (
-            echo %GREEN%%%a%RESET% - %CYAN%%%b%RESET%
+            echo %GREEN%    📦 %%a%RESET% - %CYAN%%%b%RESET%
         )
     ) else (
-        echo %YELLOW%List is empty%RESET%
+        echo %YELLOW%    List is empty%RESET%
     )
     echo.
     pause
@@ -648,7 +699,7 @@ if "%sett%"=="1" (
 if "%sett%"=="2" (
     del "%CONFIG_FILE%" 2>nul
     del "%GROUPS_FILE%" 2>nul
-    echo %GREEN%Lists cleared!%RESET%
+    echo %GREEN%    ✅ Lists cleared!%RESET%
     pause
     goto SETTINGS
 )
@@ -657,7 +708,7 @@ if "%sett%"=="3" (
     if exist "%CONFIG_FILE%" (
         notepad "%CONFIG_FILE%"
     ) else (
-        echo %RED%List is empty, nothing to edit%RESET%
+        echo %RED%    ❌ List is empty, nothing to edit%RESET%
         pause
     )
     goto SETTINGS
@@ -676,18 +727,18 @@ set "repo_path=%~2"
 set "repo_dir=%repo_path%"
 
 echo.
-echo %YELLOW%Enter URL to clone %repo_name%:%RESET%
-set /p "repo_url=%BOLD%URL: %RESET%"
+echo %YELLOW%    Enter URL to clone %repo_name%:%RESET%
+set /p "repo_url=%BOLD%    URL: %RESET%"
 
-echo %BOLD%Cloning %repo_name%...%RESET%
+echo %BOLD%    ⏳ Cloning %repo_name%...%RESET%
 if exist "%repo_dir%" (
     rd /s /q "%repo_dir%" 2>nul
 )
 git clone "%repo_url%" "%repo_dir%"
 if errorlevel 1 (
-    echo %RED%Clone error!%RESET%
+    echo %RED%    ❌ Cloning error!%RESET%
 ) else (
-    echo %GREEN%Done!%RESET%
+    echo %GREEN%    ✅ Done!%RESET%
 )
 echo.
 pause
@@ -711,7 +762,7 @@ if exist "%CONFIG_FILE%" (
 goto :eof
 
 :AUTO_REPAIR_CONFIGS
-echo %BOLD%%YELLOW%Auto-repairing configurations...%RESET%
+echo %BOLD%%YELLOW%    🔄 Automatically fixing configurations...%RESET%
 
 :: Fix git_repos.cfg
 if exist "%CONFIG_FILE%" (
@@ -725,7 +776,7 @@ if exist "%CONFIG_FILE%" (
         echo !clean_name!;!clean_path!>> "!temp_cfg!"
     )
     move /y "!temp_cfg!" "%CONFIG_FILE%" >nul 2>nul
-    echo %GREEN%git_repos.cfg repaired%RESET%
+    echo %GREEN%    ✅ git_repos.cfg fixed%RESET%
 )
 
 :: Fix groups.cfg
@@ -742,26 +793,26 @@ if exist "%GROUPS_FILE%" (
         echo %%a;!new_repo_list!>> "!temp_groups!"
     )
     move /y "!temp_groups!" "%GROUPS_FILE%" >nul 2>nul
-    echo %GREEN%groups.cfg repaired%RESET%
+    echo %GREEN%    ✅ groups.cfg fixed%RESET%
 )
 
 echo.
-echo %GREEN%Repair completed! Restart the program.%RESET%
+echo %GREEN%    ✅ Fix completed! Restart the program.%RESET%
 pause
 exit /b
 
 :MANAGE_GROUPS
 cls
-echo %BOLD%%CYAN%=== GROUP MANAGEMENT ===%RESET%
+echo %BOLD%%CYAN%    📚 GROUP MANAGEMENT%RESET%
 echo.
-echo %GREEN%1.%RESET% Create new group
-echo %GREEN%2.%RESET% Add repository to group
-echo %GREEN%3.%RESET% Remove repository from group
-echo %GREEN%4.%RESET% Show all groups
-echo %GREEN%5.%RESET% Delete group
-echo %RED%6.%RESET% Back
+echo %GREEN%    1.%RESET% Create new group
+echo %GREEN%    2.%RESET% Add repository to group
+echo %GREEN%    3.%RESET% Remove repository from group
+echo %GREEN%    4.%RESET% Show all groups
+echo %GREEN%    5.%RESET% Delete group
+echo %RED%    6.%RESET% Back
 echo.
-set /p "grp_act=%BOLD%%WHITE%Choose: %RESET%"
+set /p "grp_act=%BOLD%%WHITE%    ⚡ Choose: %RESET%"
 
 if "!grp_act!"=="1" goto CREATE_GROUP
 if "!grp_act!"=="2" goto ADD_TO_GROUP
@@ -773,12 +824,12 @@ goto MANAGE_GROUPS
 
 :CREATE_GROUP
 cls
-echo %BOLD%%CYAN%=== CREATE GROUP ===%RESET%
+echo %BOLD%%CYAN%    ✨ CREATE GROUP%RESET%
 echo.
-set /p "new_group=%GREEN%Enter group name: %RESET%"
+set /p "new_group=%GREEN%    📝 Enter group name: %RESET%"
 
 if "!new_group!"=="" (
-    echo %RED%Name cannot be empty!%RESET%
+    echo %RED%    ❌ Name cannot be empty!%RESET%
     pause
     goto MANAGE_GROUPS
 )
@@ -786,42 +837,50 @@ if "!new_group!"=="" (
 if exist "%GROUPS_FILE%" (
     findstr /b "!new_group!;" "%GROUPS_FILE%" >nul 2>&1
     if not errorlevel 1 (
-        echo %RED%Group with this name already exists!%RESET%
+        echo %RED%    ❌ Group with this name already exists!%RESET%
         pause
         goto MANAGE_GROUPS
     )
 )
 
 echo !new_group!;>> "%GROUPS_FILE%"
-echo %GREEN%Group "%new_group%" created!%RESET%
+echo %GREEN%    ✅ Group "%new_group%" created!%RESET%
 pause
 goto MANAGE_GROUPS
 
 :ADD_TO_GROUP
 cls
-echo %BOLD%%CYAN%=== ADD TO GROUP ===%RESET%
+echo %BOLD%%CYAN%    📌 ADD TO GROUP%RESET%
 echo.
 
-echo %BOLD%%WHITE%Existing groups:%RESET%
+echo %BOLD%%WHITE%    Existing groups:%RESET%
 set group_count=0
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
-        set /a group_count+=1
-        set "group_name_!group_count!=%%a"
-        echo %GREEN%!group_count!.%RESET% %%a
+        if not "%%a"=="" (
+            set /a group_count+=1
+            set "group_name_!group_count!=%%a"
+            echo %GREEN%    !group_count!.%RESET% %%a
+        )
     )
 ) else (
-    echo %YELLOW%No groups created%RESET%
+    echo %YELLOW%    No groups created%RESET%
+    pause
+    goto MANAGE_GROUPS
+)
+
+if !group_count!==0 (
+    echo %YELLOW%    No groups created%RESET%
     pause
     goto MANAGE_GROUPS
 )
 
 echo.
-set /p "group_num=%BOLD%%WHITE%Select group number: %RESET%"
+set /p "group_num=%BOLD%%WHITE%    ⚡ Select group number: %RESET%"
 set "selected_group=!group_name_%group_num%!"
 
 echo.
-echo %BOLD%%WHITE%Repositories not in groups:%RESET%
+echo %BOLD%%WHITE%    Repositories not in groups:%RESET%
 set repo_count=0
 for /f "usebackq tokens=1,* delims=;" %%a in ("%CONFIG_FILE%") do (
     set "in_group=0"
@@ -833,18 +892,18 @@ for /f "usebackq tokens=1,* delims=;" %%a in ("%CONFIG_FILE%") do (
     if !in_group!==0 (
         set /a repo_count+=1
         set "repo_name_add_!repo_count!=%%a"
-        echo %GREEN%!repo_count!.%RESET% %%a
+        echo %GREEN%    !repo_count!.%RESET% %%a
     )
 )
 
 if !repo_count!==0 (
-    echo %YELLOW%No repositories to add%RESET%
+    echo %YELLOW%    No repositories to add%RESET%
     pause
     goto MANAGE_GROUPS
 )
 
 echo.
-set /p "repo_num=%BOLD%%WHITE%Select repository number: %RESET%"
+set /p "repo_num=%BOLD%%WHITE%    ⚡ Select repository number: %RESET%"
 set "selected_repo=!repo_name_add_%repo_num%!"
 
 set "temp_groups=%TEMP%\groups.tmp"
@@ -852,7 +911,12 @@ type nul > "!temp_groups!"
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1,* delims=;" %%a in ("%GROUPS_FILE%") do (
         if "%%a"=="!selected_group!" (
-            echo %%a;%%b !selected_repo!>> "!temp_groups!"
+            :: Check if repository list is not empty
+            if "%%b"=="" (
+                echo %%a;!selected_repo!>> "!temp_groups!"
+            ) else (
+                echo %%a;%%b !selected_repo!>> "!temp_groups!"
+            )
         ) else (
             echo %%a;%%b>> "!temp_groups!"
         )
@@ -860,33 +924,36 @@ if exist "%GROUPS_FILE%" (
     move /y "!temp_groups!" "%GROUPS_FILE%" >nul 2>&1
 )
 
-echo %GREEN%Repository "%selected_repo%" added to group "%selected_group%"%RESET%
+echo %GREEN%    ✅ Repository "%selected_repo%" added to group "%selected_group%"%RESET%
 pause
 goto MANAGE_GROUPS
 
 :REMOVE_FROM_GROUP
 cls
-echo %BOLD%%CYAN%=== REMOVE FROM GROUP ===%RESET%
+echo %BOLD%%CYAN%    🗑️ REMOVE FROM GROUP%RESET%
 echo.
 
-echo %BOLD%%WHITE%Groups and their repositories:%RESET%
+echo %BOLD%%WHITE%    Groups and their repositories:%RESET%
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1,* delims=;" %%a in ("%GROUPS_FILE%") do (
-        echo.
-        echo %BOLD%%MAGENTA%Group: %%a%RESET%
-        for %%r in (%%b) do (
-            echo   %GREEN%-%RESET% %%r
+        echo %BOLD%%MAGENTA%    📁 %%a%RESET%
+        if not "%%b"=="" (
+            for %%r in (%%b) do (
+                echo %GREEN%        -%RESET% %%r
+            )
+        ) else (
+            echo %YELLOW%        empty%RESET%
         )
     )
 ) else (
-    echo %YELLOW%No groups%RESET%
+    echo %YELLOW%    No groups%RESET%
     pause
     goto MANAGE_GROUPS
 )
 
 echo.
-set /p "group_del=%BOLD%%WHITE%Enter group name: %RESET%"
-set /p "repo_del=%BOLD%%WHITE%Enter repository name to remove: %RESET%"
+set /p "group_del=%BOLD%%WHITE%    Enter group name: %RESET%"
+set /p "repo_del=%BOLD%%WHITE%    Enter repository name to remove: %RESET%"
 
 set "temp_groups=%TEMP%\groups.tmp"
 type nul > "!temp_groups!"
@@ -905,29 +972,29 @@ if exist "%GROUPS_FILE%" (
     move /y "!temp_groups!" "%GROUPS_FILE%" >nul 2>&1
 )
 
-echo %GREEN%Repository removed from group%RESET%
+echo %GREEN%    ✅ Repository removed from group%RESET%
 pause
 goto MANAGE_GROUPS
 
 :SHOW_GROUPS
 cls
-echo %BOLD%%CYAN%=== ALL GROUPS ===%RESET%
+echo %BOLD%%CYAN%    📚 ALL GROUPS%RESET%
 echo.
 
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1,2 delims=;" %%a in ("%GROUPS_FILE%") do (
-        echo %BOLD%%MAGENTA%[%%a]%RESET%
+        echo %BOLD%%MAGENTA%    [%%a]%RESET%
         if not "%%b"=="" (
             for %%r in (%%b) do (
-                echo   %GREEN%-%RESET% %%r
+                echo %GREEN%        -%RESET% %%r
             )
         ) else (
-            echo   %YELLOW%empty%RESET%
+            echo %YELLOW%        empty%RESET%
         )
         echo.
     )
 ) else (
-    echo %YELLOW%No groups created%RESET%
+    echo %YELLOW%    No groups created%RESET%
 )
 
 pause
@@ -935,21 +1002,21 @@ goto MANAGE_GROUPS
 
 :DELETE_GROUP
 cls
-echo %BOLD%%CYAN%=== DELETE GROUP ===%RESET%
+echo %BOLD%%CYAN%    🗑️ DELETE GROUP%RESET%
 echo.
 
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
-        echo %GREEN%-%RESET% %%a
+        echo %GREEN%    -%RESET% %%a
     )
 ) else (
-    echo %YELLOW%No groups to delete%RESET%
+    echo %YELLOW%    No groups to delete%RESET%
     pause
     goto MANAGE_GROUPS
 )
 
 echo.
-set /p "group_del_name=%BOLD%%WHITE%Enter group name to delete: %RESET%"
+set /p "group_del_name=%BOLD%%WHITE%    Enter group name to delete: %RESET%"
 
 set "temp_groups=%TEMP%\groups.tmp"
 type nul > "!temp_groups!"
@@ -962,6 +1029,6 @@ if exist "%GROUPS_FILE%" (
     move /y "!temp_groups!" "%GROUPS_FILE%" >nul 2>&1
 )
 
-echo %GREEN%Group deleted%RESET%
+echo %GREEN%    ✅ Group deleted%RESET%
 pause
 goto MANAGE_GROUPS

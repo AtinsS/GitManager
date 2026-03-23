@@ -25,23 +25,20 @@ set "TEMP_FILE=%SCRIPT_DIR%\temp.cfg"
 
 :MENU
 cls
-echo %BOLD%%CYAN%╔══════════════════════════════════════════════════════════╗%RESET%
-echo %BOLD%%CYAN%║              GIT МЕНЕДЖЕР РЕПОЗИТОРИЕВ                   ║%RESET%
-echo %BOLD%%CYAN%╚══════════════════════════════════════════════════════════╝%RESET%
-echo %YELLOW%=====================By AtinsS==============================%RESET%
+echo %BOLD%%CYAN%    🚀 GIT МЕНЕДЖЕР - Управление репозиториями    %RESET%
+echo %YELLOW%    ═══════════════════ By AtinsS ═══════════════════%RESET%
 echo.
 
 :: Загружаем список сохраненных репозиториев
 set count=0
 if exist "%CONFIG_FILE%" (
-    echo %BOLD%%WHITE%Сохраненные репозитории:%RESET%
-    echo %BLUE%------------------------%RESET%
+    echo %BOLD%%WHITE%    Список репозиториев:%RESET%
     
     :: Сначала показываем по группам
     if exist "%GROUPS_FILE%" (
         for /f "usebackq tokens=1,* delims=;" %%a in ("%GROUPS_FILE%") do (
             echo.
-            echo %BOLD%%MAGENTA%[Группа: %%a]%RESET%
+            echo %BOLD%%MAGENTA%    📁 Группа: %%a%RESET%
             set "group_repos=%%b"
             if not "!group_repos!"=="" (
                 for %%r in (!group_repos!) do (
@@ -52,16 +49,16 @@ if exist "%CONFIG_FILE%" (
                             set "repo_name_!count!=%%x"
                             set "repo_path_!count!=%%y"
                             call :GET_REPO_STATUS "%%y" status_!count!
-                            echo !status_! %GREEN%!count!. %BOLD%%%x%RESET% - %CYAN%%%y%RESET% !branch_!
+                            echo     %GREEN%!count!.%RESET% !status_! %%x !branch_!
                             set "repo_found=1"
                         )
                     )
                     if !repo_found!==0 (
-                        echo %RED%  ⚠ Репозиторий "%%r" не найден в списке%RESET%
+                        echo     %RED%⚠ Репозиторий "%%r" не найден%RESET%
                     )
                 )
             ) else (
-                echo %YELLOW%  группа пуста%RESET%
+                echo     %YELLOW%группа пуста%RESET%
             )
         )
     )
@@ -82,7 +79,7 @@ if exist "%CONFIG_FILE%" (
     
     if !temp_count! gtr 0 (
         echo.
-        echo %BOLD%%YELLOW%[Без группы]%RESET%
+        echo %BOLD%%YELLOW%    📁 Без группы:%RESET%
         for /f "usebackq tokens=1,* delims=;" %%a in ("%CONFIG_FILE%") do (
             set "found=0"
             if exist "%GROUPS_FILE%" (
@@ -95,27 +92,26 @@ if exist "%CONFIG_FILE%" (
                 set "repo_name_!count!=%%a"
                 set "repo_path_!count!=%%b"
                 call :GET_REPO_STATUS "%%b" status_!count!
-                echo !status_!count!! %GREEN%!count!. %BOLD%%%a%RESET% - %CYAN%%%b%RESET% !branch_!count!!
+                echo     %GREEN%!count!.%RESET% !status_! %%a !branch_!
             )
         )
     )
 ) else (
-    echo %YELLOW%Список репозиториев пуст%RESET%
+    echo %YELLOW%    Список репозиториев пока пуст%RESET%
 )
 
 echo.
-echo %BOLD%%WHITE%Действия:%RESET%
-echo %BLUE%========%RESET%
-if %count% gtr 0 echo %GREEN%Введите номер репозитория (1-%count%)%RESET%
-echo %CYAN%C.%RESET% Клонировать новый репозиторий
-echo %CYAN%A.%RESET% Добавить существующий локальный репозиторий
-echo %CYAN%U.%RESET% Обновить все репозитории
-echo %CYAN%G.%RESET% Управление группами
-echo %CYAN%D.%RESET% Удалить репозиторий из списка
-echo %CYAN%S.%RESET% Настройки
-echo %RED%X.%RESET% Выход
+echo %BOLD%%WHITE%    Меню действий:%RESET%
+if %count% gtr 0 echo %GREEN%    1-%count%:%RESET% Выбрать репозиторий по номеру
+echo %CYAN%    C:%RESET% Клонировать новый репозиторий
+echo %CYAN%    A:%RESET% Добавить существующий локальный репозиторий
+echo %CYAN%    U:%RESET% Обновить все репозитории
+echo %CYAN%    G:%RESET% Управление группами
+echo %CYAN%    D:%RESET% Удалить репозиторий из списка
+echo %CYAN%    S:%RESET% Настройки
+echo %RED%    X:%RESET% Выход
 echo.
-set /p "action=%BOLD%%WHITE%Ваш выбор: %RESET%"
+set /p "action=%BOLD%%WHITE%    ⚡ Ваш выбор: %RESET%"
 
 :: Проверяем, число или буква
 set is_number=0
@@ -128,7 +124,7 @@ if %is_number%==1 (
         call :SELECT_REPO
         goto MENU
     ) else (
-        echo %RED%Неверный номер!%RESET%
+        echo %RED%    ❌ Неверный номер!%RESET%
         pause
         goto MENU
     )
@@ -139,8 +135,8 @@ if %is_number%==1 (
     if /i "%action%"=="G" goto MANAGE_GROUPS
     if /i "%action%"=="D" goto DELETE_REPO
     if /i "%action%"=="S" goto SETTINGS
-    if /i "%action%"=="X" exit /b
-    echo %RED%Неверный выбор!%RESET%
+    if /i "%action%"=="X" exit 
+    echo %RED%    ❌ Неверный выбор!%RESET%
     pause
     goto MENU
 )
@@ -197,25 +193,25 @@ set "REPO_NAME=!repo_name_%repo_index%!"
 set "REPO_PATH=!repo_path_%repo_index%!"
 
 echo.
-echo %BOLD%%WHITE%Выбран репозиторий:%RESET% %GREEN%%REPO_NAME%%RESET%
-echo %BOLD%%WHITE%Путь:%RESET% %CYAN%%REPO_PATH%%RESET%
+echo %BOLD%%WHITE%    Выбран репозиторий:%RESET% %GREEN%📁 %REPO_NAME%%RESET%
+echo %BOLD%%WHITE%    Путь:%RESET% %CYAN%📌 %REPO_PATH%%RESET%
 
 :: Проверяем существует ли папка
 if not exist "%REPO_PATH%" (
     echo.
-    echo %RED%⚠ ПРЕДУПРЕЖДЕНИЕ: Папка не найдена!%RESET%
+    echo %RED%    ⚠ ПРЕДУПРЕЖДЕНИЕ: Папка не найдена!%RESET%
     echo.
-    echo %GREEN%1.%RESET% Клонировать заново
-    echo %YELLOW%2.%RESET% Указать новый путь
-    echo %RED%3.%RESET% Вернуться в меню
+    echo %GREEN%    1.%RESET% Клонировать заново
+    echo %YELLOW%    2.%RESET% Указать новый путь
+    echo %RED%    3.%RESET% Вернуться в меню
     echo.
-    set /p "fix=%BOLD%%WHITE%Выберите действие: %RESET%"
+    set /p "fix=%BOLD%%WHITE%    Выберите действие: %RESET%"
     
     if "!fix!"=="1" (
         call :CLONE_REPO_EXISTING "%REPO_NAME%" "%REPO_PATH%"
         goto :eof
     ) else if "!fix!"=="2" (
-        set /p "REPO_PATH=%YELLOW%Новый путь: %RESET%"
+        set /p "REPO_PATH=%YELLOW%    Новый путь: %RESET%"
         call :UPDATE_REPO_PATH "%REPO_NAME%" "!REPO_PATH!"
         cd /d "!REPO_PATH!" 2>nul
     ) else (
@@ -227,7 +223,7 @@ if not exist "%REPO_PATH%" (
 
 :: Проверяем что перешли успешно
 if errorlevel 1 (
-    echo %RED%Ошибка: Не могу перейти в папку!%RESET%
+    echo %RED%    ❌ Ошибка: Не могу перейти в папку!%RESET%
     pause
     goto :eof
 )
@@ -235,7 +231,7 @@ if errorlevel 1 (
 :: Проверяем что это git репозиторий
 git status >nul 2>&1
 if errorlevel 1 (
-    echo %RED%Ошибка: Папка не является git репозиторием!%RESET%
+    echo %RED%    ❌ Ошибка: Папка не является git репозиторием!%RESET%
     pause
     goto :eof
 )
@@ -259,29 +255,28 @@ if "!current_branch!"=="" set "current_branch=неизвестно"
 :: Получаем статус
 git status --porcelain | findstr . >nul 2>&1
 if errorlevel 1 (
-    set "repo_status=%GREEN%чисто%RESET%"
+    set "repo_status=%GREEN%✅ чисто%RESET%"
 ) else (
-    set "repo_status=%YELLOW%есть изменения%RESET%"
+    set "repo_status=%YELLOW%⚠ есть изменения%RESET%"
 )
 
-echo %CYAN%════════════════════════════════════════════════════════════%RESET%
-echo %BOLD%%WHITE%      Репозиторий:%RESET% %GREEN%%current_repo%%RESET%
-echo %BOLD%%WHITE%      Путь:%RESET% %YELLOW%%cd%%RESET%
-echo %BOLD%%WHITE%      Ветка:%RESET% %BLUE%!current_branch!%RESET%  %BOLD%%WHITE%Статус:%RESET% !repo_status!
-echo %CYAN%════════════════════════════════════════════════════════════%RESET%
+echo %CYAN%    ════════════════════════════════════════════════════════════%RESET%
+echo %BOLD%%WHITE%    Репозиторий:%RESET% %GREEN%%current_repo%%RESET%    %BOLD%%WHITE%Ветка:%RESET% %BLUE%!current_branch!%RESET%
+echo %BOLD%%WHITE%    Статус:%RESET% !repo_status!
+echo %CYAN%    ════════════════════════════════════════════════════════════%RESET%
 echo.
-echo %GREEN%1.%RESET% Git status (проверить состояние)
-echo %GREEN%2.%RESET% Git pull (обновить)
-echo %GREEN%3.%RESET% Git add + commit (с комментарием)
-echo %GREEN%4.%RESET% Git push (отправить)
-echo %GREEN%5.%RESET% Быстрый commit + push (авто-комментарий)
-echo %GREEN%6.%RESET% Просмотр истории (git log)
-echo %GREEN%7.%RESET% Создать ветку
-echo %GREEN%8.%RESET% Переключить ветку
-echo %GREEN%9.%RESET% Авто-коммиты (каждые N минут)
-echo %RED%0.%RESET% Вернуться в главное меню
+echo %GREEN%    1.%RESET% Git status (проверить состояние)
+echo %GREEN%    2.%RESET% Git pull (обновить)
+echo %GREEN%    3.%RESET% Git add + commit (с комментарием)
+echo %GREEN%    4.%RESET% Git push (отправить)
+echo %GREEN%    5.%RESET% Быстрый commit + push (авто-комментарий)
+echo %GREEN%    6.%RESET% Просмотр истории (git log)
+echo %GREEN%    7.%RESET% Создать ветку
+echo %GREEN%    8.%RESET% Переключить ветку
+echo %GREEN%    9.%RESET% Авто-коммиты (каждые N минут)
+echo %RED%    0.%RESET% Вернуться в главное меню
 echo.
-set /p "repo_action=%BOLD%%WHITE%Выберите действие: %RESET%"
+set /p "repo_action=%BOLD%%WHITE%    ⚡ Выберите действие: %RESET%"
 
 :: Проверяем существование скриптов
 if not exist "%SCRIPT_DIR%\git-scripts" (
@@ -289,16 +284,21 @@ if not exist "%SCRIPT_DIR%\git-scripts" (
 )
 
 if "%repo_action%"=="1" (
+    cls
+    echo %BOLD%%CYAN%    === GIT STATUS ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\01-git-status.bat" (
         call "%SCRIPT_DIR%\git-scripts\01-git-status.bat" "%current_repo%"
     ) else (
-        echo %RED%Скрипт не найден!%RESET%
         git status
     )
     pause
     goto REPO_LOOP
 )
 if "%repo_action%"=="2" (
+    cls
+    echo %BOLD%%CYAN%    === GIT PULL ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\02-git-pull.bat" (
         call "%SCRIPT_DIR%\git-scripts\02-git-pull.bat" "%current_repo%"
     ) else (
@@ -308,16 +308,22 @@ if "%repo_action%"=="2" (
     goto REPO_LOOP
 )
 if "%repo_action%"=="3" (
+    cls
+    echo %BOLD%%CYAN%    === GIT COMMIT ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\03-git-commit.bat" (
         call "%SCRIPT_DIR%\git-scripts\03-git-commit.bat" "%current_repo%"
     ) else (
-        set /p "commit_msg=%YELLOW%Комментарий: %RESET%"
+        set /p "commit_msg=%YELLOW%    Комментарий: %RESET%"
         git add . && git commit -m "!commit_msg!"
     )
     pause
     goto REPO_LOOP
 )
 if "%repo_action%"=="4" (
+    cls
+    echo %BOLD%%CYAN%    === GIT PUSH ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\04-git-push.bat" (
         call "%SCRIPT_DIR%\git-scripts\04-git-push.bat" "%current_repo%"
     ) else (
@@ -327,6 +333,9 @@ if "%repo_action%"=="4" (
     goto REPO_LOOP
 )
 if "%repo_action%"=="5" (
+    cls
+    echo %BOLD%%CYAN%    === QUICK PUSH ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\05-git-quick-push.bat" (
         call "%SCRIPT_DIR%\git-scripts\05-git-quick-push.bat" "%current_repo%"
     ) else (
@@ -336,6 +345,9 @@ if "%repo_action%"=="5" (
     goto REPO_LOOP
 )
 if "%repo_action%"=="6" (
+    cls
+    echo %BOLD%%CYAN%    === GIT LOG ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\06-git-log.bat" (
         call "%SCRIPT_DIR%\git-scripts\06-git-log.bat" "%current_repo%"
     ) else (
@@ -345,48 +357,58 @@ if "%repo_action%"=="6" (
     goto REPO_LOOP
 )
 if "%repo_action%"=="7" (
+    cls
+    echo %BOLD%%CYAN%    === СОЗДАНИЕ ВЕТКИ ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\07-git-create-branch.bat" (
         call "%SCRIPT_DIR%\git-scripts\07-git-create-branch.bat" "%current_repo%"
     ) else (
-        set /p "branch_name=%YELLOW%Имя ветки: %RESET%"
+        set /p "branch_name=%YELLOW%    Имя ветки: %RESET%"
         git branch "!branch_name!"
     )
     pause
     goto REPO_LOOP
 )
 if "%repo_action%"=="8" (
+    cls
+    echo %BOLD%%CYAN%    === ПЕРЕКЛЮЧЕНИЕ ВЕТКИ ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\08-git-switch-branch.bat" (
         call "%SCRIPT_DIR%\git-scripts\08-git-switch-branch.bat" "%current_repo%"
     ) else (
         git branch
-        set /p "branch_name=%YELLOW%Ветка для переключения: %RESET%"
+        echo.
+        set /p "branch_name=%YELLOW%    Ветка для переключения: %RESET%"
         git checkout "!branch_name!"
     )
     pause
     goto REPO_LOOP
 )
 if "%repo_action%"=="9" (
+    cls
+    echo %BOLD%%CYAN%    === АВТО-КОММИТЫ ===%RESET%
+    echo.
     if exist "%SCRIPT_DIR%\git-scripts\09-git-auto-commit.bat" (
         call "%SCRIPT_DIR%\git-scripts\09-git-auto-commit.bat" "%current_repo%"
     ) else (
-        echo %RED%Скрипт авто-коммитов не найден%RESET%
+        echo %RED%    ❌ Скрипт авто-коммитов не найден%RESET%
     )
     pause
     goto REPO_LOOP
 )
 if "%repo_action%"=="0" goto MENU
 
-echo %RED%Неверный выбор!%RESET%
+echo %RED%    ❌ Неверный выбор!%RESET%
 pause
 goto REPO_LOOP
 
 :CLONE_REPO
 cls
-echo %BOLD%%CYAN%=== КЛОНИРОВАНИЕ РЕПОЗИТОРИЯ ===%RESET%
+echo %BOLD%%CYAN%    📥 КЛОНИРОВАНИЕ РЕПОЗИТОРИЯ%RESET%
 echo.
-set /p "repo_name=%GREEN%Имя репозитория (для сохранения): %RESET%"
-set /p "repo_url=%YELLOW%URL репозитория (https://github.com/...): %RESET%"
-set /p "clone_path=%BLUE%Путь для клонирования (Enter - текущая папка): %RESET%"
+set /p "repo_name=%GREEN%    📦 Имя репозитория: %RESET%"
+set /p "repo_url=%YELLOW%    🔗 URL репозитория: %RESET%"
+set /p "clone_path=%BLUE%    📁 Путь для клонирования (Enter - текущая папка): %RESET%"
 
 if "!clone_path!"=="" set "clone_path=%cd%"
 if not exist "!clone_path!" mkdir "!clone_path!" 2>nul
@@ -394,26 +416,28 @@ if not exist "!clone_path!" mkdir "!clone_path!" 2>nul
 set "full_path=!clone_path!\!repo_name!"
 
 echo.
-echo %BOLD%Клонирование %repo_name% из %repo_url% в %full_path%...%RESET%
+echo %BOLD%    ⏳ Клонирование %repo_name% из %repo_url% в %full_path%...%RESET%
 git clone "%repo_url%" "%full_path%"
 
 if errorlevel 1 (
-    echo %RED%Ошибка клонирования!%RESET%
+    echo %RED%    ❌ Ошибка клонирования!%RESET%
     pause
     goto MENU
 )
 
 echo %repo_name%;%full_path% >> "%CONFIG_FILE%"
-echo %GREEN%Репозиторий успешно клонирован и добавлен в список!%RESET%
+echo %GREEN%    ✅ Репозиторий успешно клонирован и добавлен в список!%RESET%
 
 :: Спрашиваем про группу
 echo.
-echo %BOLD%%WHITE%Добавить репозиторий в группу?%RESET%
-set /p "add_to_group=%YELLOW%[д/н]: %RESET%"
+echo %BOLD%%WHITE%    Добавление в группу:%RESET%
+set /p "add_to_group=%YELLOW%    Добавить репозиторий в группу? [д/н]: %RESET%"
 
 if /i "!add_to_group!"=="д" (
     call :ADD_REPO_TO_GROUP "%repo_name%"
 ) else if /i "!add_to_group!"=="y" (
+    call :ADD_REPO_TO_GROUP "%repo_name%"
+) else if /i "!add_to_group!"=="да" (
     call :ADD_REPO_TO_GROUP "%repo_name%"
 )
 
@@ -422,35 +446,35 @@ goto MENU
 
 :ADD_EXISTING
 cls
-echo %BOLD%%CYAN%=== ДОБАВЛЕНИЕ СУЩЕСТВУЮЩЕГО РЕПОЗИТОРИЯ ===%RESET%
+echo %BOLD%%CYAN%    📂 ДОБАВЛЕНИЕ СУЩЕСТВУЮЩЕГО РЕПОЗИТОРИЯ%RESET%
 echo.
-set /p "repo_name=%GREEN%Имя репозитория: %RESET%"
-set /p "repo_path=%YELLOW%Полный путь к репозиторию: %RESET%"
+set /p "repo_name=%GREEN%    📦 Имя репозитория: %RESET%"
+set /p "repo_path=%YELLOW%    📁 Полный путь к репозиторию: %RESET%"
 
 set "repo_path=%repo_path:"=%"
 
 if "!repo_path!"=="" (
-    echo %RED%Ошибка: Путь не может быть пустым!%RESET%
+    echo %RED%    ❌ Ошибка: Путь не может быть пустым!%RESET%
     pause
     goto MENU
 )
 
 if not exist "!repo_path!" (
-    echo %RED%Ошибка: Папка не найдена!%RESET%
+    echo %RED%    ❌ Ошибка: Папка не найдена!%RESET%
     pause
     goto MENU
 )
 
 pushd "!repo_path!" 2>nul
 if errorlevel 1 (
-    echo %RED%Ошибка: Не могу перейти в папку!%RESET%
+    echo %RED%    ❌ Ошибка: Не могу перейти в папку!%RESET%
     pause
     goto MENU
 )
 
 git status >nul 2>&1
 if errorlevel 1 (
-    echo %RED%Ошибка: Папка не является git репозиторием!%RESET%
+    echo %RED%    ❌ Ошибка: Папка не является git репозиторием!%RESET%
     popd
     pause
     goto MENU
@@ -459,16 +483,18 @@ popd
 
 :: Сохраняем в конфиг
 echo %repo_name%;!repo_path! >> "%CONFIG_FILE%"
-echo %GREEN%Репозиторий добавлен в список!%RESET%
+echo %GREEN%    ✅ Репозиторий добавлен в список!%RESET%
 
 :: Спрашиваем про группу
 echo.
-echo %BOLD%%WHITE%Добавить репозиторий в группу?%RESET%
-set /p "add_to_group=%YELLOW%[д/н]: %RESET%"
+echo %BOLD%%WHITE%    Добавление в группу:%RESET%
+set /p "add_to_group=%YELLOW%    Добавить репозиторий в группу? [д/н]: %RESET%"
 
 if /i "!add_to_group!"=="д" (
     call :ADD_REPO_TO_GROUP "%repo_name%"
 ) else if /i "!add_to_group!"=="y" (
+    call :ADD_REPO_TO_GROUP "%repo_name%"
+) else if /i "!add_to_group!"=="да" (
     call :ADD_REPO_TO_GROUP "%repo_name%"
 )
 
@@ -480,27 +506,51 @@ set "repo_to_add=%~1"
 
 :: Проверяем есть ли группы
 if not exist "%GROUPS_FILE%" (
-    echo %YELLOW%Нет созданных групп. Хотите создать новую?%RESET%
-    set /p "create_new=%YELLOW%[д/н]: %RESET%"
+    echo %YELLOW%    ⚠ Нет созданных групп. Хотите создать новую?%RESET%
+    set /p "create_new=%YELLOW%    [д/н]: %RESET%"
     if /i "!create_new!"=="д" (
         call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
-    ) else (
+    ) else if /i "!create_new!"=="y" (
+        call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+    ) else if /i "!create_new!"=="да" (
+        call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+    )
+    goto :eof
+) else (
+    :: Проверяем, есть ли вообще группы в файле (может быть пустой файл)
+    set "group_exists=0"
+    for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
+        if not "%%a"=="" set "group_exists=1"
+    )
+    
+    if !group_exists!==0 (
+        echo %YELLOW%    ⚠ Нет созданных групп. Хотите создать новую?%RESET%
+        set /p "create_new=%YELLOW%    [д/н]: %RESET%"
+        if /i "!create_new!"=="д" (
+            call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+        ) else if /i "!create_new!"=="y" (
+            call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+        ) else if /i "!create_new!"=="да" (
+            call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+        )
         goto :eof
     )
-) else (
+    
     :: Показываем существующие группы
     echo.
-    echo %BOLD%%WHITE%Выберите группу:%RESET%
+    echo %BOLD%%WHITE%    Выберите группу:%RESET%
     set group_count=0
     for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
-        set /a group_count+=1
-        set "group_name_add_!group_count!=%%a"
-        echo %GREEN%!group_count!.%RESET% %%a
+        if not "%%a"=="" (
+            set /a group_count+=1
+            set "group_name_add_!group_count!=%%a"
+            echo %GREEN%    !group_count!.%RESET% %%a
+        )
     )
-    echo %GREEN%0.%RESET% Создать новую группу
+    echo %GREEN%    0.%RESET% Создать новую группу
     
     echo.
-    set /p "group_choice=%BOLD%%WHITE%Ваш выбор: %RESET%"
+    set /p "group_choice=%BOLD%%WHITE%    ⚡ Ваш выбор: %RESET%"
     
     if "!group_choice!"=="0" (
         call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
@@ -513,14 +563,19 @@ if not exist "%GROUPS_FILE%" (
             type nul > "!temp_groups!"
             for /f "usebackq tokens=1,* delims=;" %%a in ("%GROUPS_FILE%") do (
                 if "%%a"=="!selected_group!" (
-                    echo %%a;%%b !repo_to_add!>> "!temp_groups!"
+                    :: Проверяем, не пустой ли список репозиториев
+                    if "%%b"=="" (
+                        echo %%a;!repo_to_add!>> "!temp_groups!"
+                    ) else (
+                        echo %%a;%%b !repo_to_add!>> "!temp_groups!"
+                    )
                 ) else (
                     echo %%a;%%b>> "!temp_groups!"
                 )
             )
             move /y "!temp_groups!" "%GROUPS_FILE%" >nul 2>&1
         )
-        echo %GREEN%Репозиторий "%repo_to_add%" добавлен в группу "%selected_group%"%RESET%
+        echo %GREEN%    ✅ Репозиторий "%repo_to_add%" добавлен в группу "%selected_group%"%RESET%
     )
 )
 goto :eof
@@ -528,10 +583,10 @@ goto :eof
 :CREATE_GROUP_FROM_ADD
 set "repo_to_add=%~1"
 echo.
-set /p "new_group=%GREEN%Введите название новой группы: %RESET%"
+set /p "new_group=%GREEN%    📝 Введите название новой группы: %RESET%"
 
 if "!new_group!"=="" (
-    echo %RED%Название не может быть пустым!%RESET%
+    echo %RED%    ❌ Название не может быть пустым!%RESET%
     pause
     goto :eof
 )
@@ -540,7 +595,7 @@ if "!new_group!"=="" (
 if exist "%GROUPS_FILE%" (
     findstr /b "!new_group!;" "%GROUPS_FILE%" >nul 2>&1
     if not errorlevel 1 (
-        echo %RED%Группа с таким именем уже существует!%RESET%
+        echo %RED%    ❌ Группа с таким именем уже существует!%RESET%
         pause
         goto :eof
     )
@@ -548,49 +603,50 @@ if exist "%GROUPS_FILE%" (
 
 :: Создаем группу и добавляем репозиторий
 echo !new_group!;%repo_to_add%>> "%GROUPS_FILE%"
-echo %GREEN%Группа "%new_group%" создана и репозиторий добавлен!%RESET%
+echo %GREEN%    ✅ Группа "%new_group%" создана и репозиторий добавлен!%RESET%
+pause
 goto :eof
 
 :UPDATE_ALL
 cls
-echo %BOLD%%CYAN%=== ОБНОВЛЕНИЕ ВСЕХ РЕПОЗИТОРИЕВ ===%RESET%
+echo %BOLD%%CYAN%    🔄 ОБНОВЛЕНИЕ ВСЕХ РЕПОЗИТОРИЕВ%RESET%
 echo.
 
 if not exist "%CONFIG_FILE%" (
-    echo %RED%Нет сохраненных репозиториев!%RESET%
+    echo %RED%    ❌ Нет сохраненных репозиториев!%RESET%
     pause
     goto MENU
 )
 
 for /f "usebackq tokens=1,2 delims=;" %%a in ("%CONFIG_FILE%") do (
     echo.
-    echo %BOLD%%BLUE%===== Обработка:%RESET% %GREEN%%%a%RESET% %BLUE%=====%RESET%
+    echo %BOLD%%BLUE%    [%%a]%RESET%
     if exist "%%b" (
         pushd "%%b" 2>nul
         if not errorlevel 1 (
-            echo %YELLOW%Обновление...%RESET%
+            echo %YELLOW%    Обновление...%RESET%
             git pull
             popd
         ) else (
-            echo %RED%⚠ Не могу перейти в папку%RESET%
+            echo %RED%    ⚠ Не могу перейти в папку%RESET%
         )
     ) else (
-        echo %RED%⚠ Папка не найдена: %%b%RESET%
+        echo %RED%    ⚠ Папка не найдена: %%b%RESET%
     )
 )
 
 echo.
-echo %GREEN%Обновление завершено!%RESET%
+echo %GREEN%    ✅ Обновление завершено!%RESET%
 pause
 goto MENU
 
 :DELETE_REPO
 cls
-echo %BOLD%%CYAN%=== УДАЛЕНИЕ РЕПОЗИТОРИЯ ИЗ СПИСКА ===%RESET%
+echo %BOLD%%CYAN%    🗑️ УДАЛЕНИЕ РЕПОЗИТОРИЯ ИЗ СПИСКА%RESET%
 echo.
 
 if not exist "%CONFIG_FILE%" (
-    echo %RED%Нет репозиториев для удаления!%RESET%
+    echo %RED%    ❌ Нет репозиториев для удаления!%RESET%
     pause
     goto MENU
 )
@@ -602,7 +658,7 @@ for /f "usebackq tokens=1,2 delims=;" %%a in ("%CONFIG_FILE%") do (
 )
 
 echo.
-set /p "del_num=%BOLD%%RED%Номер репозитория для удаления: %RESET%"
+set /p "del_num=%BOLD%%RED%    ⚠ Номер репозитория для удаления: %RESET%"
 
 set skip_line=%del_num%
 set current=0
@@ -617,32 +673,31 @@ if exist "%CONFIG_FILE%" (
     move /y "%TEMP_FILE%" "%CONFIG_FILE%" >nul 2>nul
 )
 
-echo %GREEN%Репозиторий удален из списка!%RESET%
+echo %GREEN%    ✅ Репозиторий удален из списка!%RESET%
 pause
 goto MENU
 
 :SETTINGS
 cls
-echo %BOLD%%CYAN%=== НАСТРОЙКИ ===%RESET%
+echo %BOLD%%CYAN%    ⚙️ НАСТРОЙКИ%RESET%
 echo.
-echo %GREEN%1.%RESET% Показать все репозитории
-echo %YELLOW%2.%RESET% Очистить список
-echo %BLUE%3.%RESET% Редактировать пути вручную
-echo %MAGENTA%4.%RESET% Авто-исправление конфигов
-echo %RED%5.%RESET% Назад
+echo %GREEN%    1.%RESET% Показать все репозитории
+echo %YELLOW%    2.%RESET% Очистить список
+echo %BLUE%    3.%RESET% Редактировать пути вручную
+echo %MAGENTA%    4.%RESET% Авто-исправление конфигов
+echo %RED%    5.%RESET% Назад
 echo.
-set /p "sett=%BOLD%%WHITE%Выберите: %RESET%"
+set /p "sett=%BOLD%%WHITE%    ⚡ Выберите: %RESET%"
 
 if "%sett%"=="1" (
     cls
-    echo %BOLD%%WHITE%Список репозиториев:%RESET%
-    echo %BLUE%===================%RESET%
+    echo %BOLD%%WHITE%    Список репозиториев:%RESET%
     if exist "%CONFIG_FILE%" (
         for /f "usebackq tokens=1,2 delims=;" %%a in ("%CONFIG_FILE%") do (
-            echo %GREEN%%%a%RESET% - %CYAN%%%b%RESET%
+            echo %GREEN%    📦 %%a%RESET% - %CYAN%%%b%RESET%
         )
     ) else (
-        echo %YELLOW%Список пуст%RESET%
+        echo %YELLOW%    Список пуст%RESET%
     )
     echo.
     pause
@@ -652,7 +707,7 @@ if "%sett%"=="1" (
 if "%sett%"=="2" (
     del "%CONFIG_FILE%" 2>nul
     del "%GROUPS_FILE%" 2>nul
-    echo %GREEN%Списки очищены!%RESET%
+    echo %GREEN%    ✅ Списки очищены!%RESET%
     pause
     goto SETTINGS
 )
@@ -661,7 +716,7 @@ if "%sett%"=="3" (
     if exist "%CONFIG_FILE%" (
         notepad "%CONFIG_FILE%"
     ) else (
-        echo %RED%Список пуст, нечего редактировать%RESET%
+        echo %RED%    ❌ Список пуст, нечего редактировать%RESET%
         pause
     )
     goto SETTINGS
@@ -680,18 +735,18 @@ set "repo_path=%~2"
 set "repo_dir=%repo_path%"
 
 echo.
-echo %YELLOW%Введите URL для клонирования %repo_name%:%RESET%
-set /p "repo_url=%BOLD%URL: %RESET%"
+echo %YELLOW%    Введите URL для клонирования %repo_name%:%RESET%
+set /p "repo_url=%BOLD%    URL: %RESET%"
 
-echo %BOLD%Клонирование %repo_name%...%RESET%
+echo %BOLD%    ⏳ Клонирование %repo_name%...%RESET%
 if exist "%repo_dir%" (
     rd /s /q "%repo_dir%" 2>nul
 )
 git clone "%repo_url%" "%repo_dir%"
 if errorlevel 1 (
-    echo %RED%Ошибка клонирования!%RESET%
+    echo %RED%    ❌ Ошибка клонирования!%RESET%
 ) else (
-    echo %GREEN%Готово!%RESET%
+    echo %GREEN%    ✅ Готово!%RESET%
 )
 echo.
 pause
@@ -715,7 +770,7 @@ if exist "%CONFIG_FILE%" (
 goto :eof
 
 :AUTO_REPAIR_CONFIGS
-echo %BOLD%%YELLOW%Автоматическое исправление конфигураций...%RESET%
+echo %BOLD%%YELLOW%    🔄 Автоматическое исправление конфигураций...%RESET%
 
 :: Исправляем git_repos.cfg
 if exist "%CONFIG_FILE%" (
@@ -729,7 +784,7 @@ if exist "%CONFIG_FILE%" (
         echo !clean_name!;!clean_path!>> "!temp_cfg!"
     )
     move /y "!temp_cfg!" "%CONFIG_FILE%" >nul 2>nul
-    echo %GREEN%git_repos.cfg исправлен%RESET%
+    echo %GREEN%    ✅ git_repos.cfg исправлен%RESET%
 )
 
 :: Исправляем groups.cfg
@@ -746,26 +801,26 @@ if exist "%GROUPS_FILE%" (
         echo %%a;!new_repo_list!>> "!temp_groups!"
     )
     move /y "!temp_groups!" "%GROUPS_FILE%" >nul 2>nul
-    echo %GREEN%groups.cfg исправлен%RESET%
+    echo %GREEN%    ✅ groups.cfg исправлен%RESET%
 )
 
 echo.
-echo %GREEN%Исправление завершено! Запустите программу заново.%RESET%
+echo %GREEN%    ✅ Исправление завершено! Запустите программу заново.%RESET%
 pause
 exit /b
 
 :MANAGE_GROUPS
 cls
-echo %BOLD%%CYAN%=== УПРАВЛЕНИЕ ГРУППАМИ ===%RESET%
+echo %BOLD%%CYAN%    📚 УПРАВЛЕНИЕ ГРУППАМИ%RESET%
 echo.
-echo %GREEN%1.%RESET% Создать новую группу
-echo %GREEN%2.%RESET% Добавить репозиторий в группу
-echo %GREEN%3.%RESET% Удалить репозиторий из группы
-echo %GREEN%4.%RESET% Показать все группы
-echo %GREEN%5.%RESET% Удалить группу
-echo %RED%6.%RESET% Назад
+echo %GREEN%    1.%RESET% Создать новую группу
+echo %GREEN%    2.%RESET% Добавить репозиторий в группу
+echo %GREEN%    3.%RESET% Удалить репозиторий из группы
+echo %GREEN%    4.%RESET% Показать все группы
+echo %GREEN%    5.%RESET% Удалить группу
+echo %RED%    6.%RESET% Назад
 echo.
-set /p "grp_act=%BOLD%%WHITE%Выберите: %RESET%"
+set /p "grp_act=%BOLD%%WHITE%    ⚡ Выберите: %RESET%"
 
 if "!grp_act!"=="1" goto CREATE_GROUP
 if "!grp_act!"=="2" goto ADD_TO_GROUP
@@ -777,12 +832,12 @@ goto MANAGE_GROUPS
 
 :CREATE_GROUP
 cls
-echo %BOLD%%CYAN%=== СОЗДАНИЕ ГРУППЫ ===%RESET%
+echo %BOLD%%CYAN%    ✨ СОЗДАНИЕ ГРУППЫ%RESET%
 echo.
-set /p "new_group=%GREEN%Введите название группы: %RESET%"
+set /p "new_group=%GREEN%    📝 Введите название группы: %RESET%"
 
 if "!new_group!"=="" (
-    echo %RED%Название не может быть пустым!%RESET%
+    echo %RED%    ❌ Название не может быть пустым!%RESET%
     pause
     goto MANAGE_GROUPS
 )
@@ -790,42 +845,50 @@ if "!new_group!"=="" (
 if exist "%GROUPS_FILE%" (
     findstr /b "!new_group!;" "%GROUPS_FILE%" >nul 2>&1
     if not errorlevel 1 (
-        echo %RED%Группа с таким именем уже существует!%RESET%
+        echo %RED%    ❌ Группа с таким именем уже существует!%RESET%
         pause
         goto MANAGE_GROUPS
     )
 )
 
 echo !new_group!;>> "%GROUPS_FILE%"
-echo %GREEN%Группа "%new_group%" создана!%RESET%
+echo %GREEN%    ✅ Группа "%new_group%" создана!%RESET%
 pause
 goto MANAGE_GROUPS
 
 :ADD_TO_GROUP
 cls
-echo %BOLD%%CYAN%=== ДОБАВЛЕНИЕ В ГРУППУ ===%RESET%
+echo %BOLD%%CYAN%    📌 ДОБАВЛЕНИЕ В ГРУППУ%RESET%
 echo.
 
-echo %BOLD%%WHITE%Существующие группы:%RESET%
+echo %BOLD%%WHITE%    Существующие группы:%RESET%
 set group_count=0
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
-        set /a group_count+=1
-        set "group_name_!group_count!=%%a"
-        echo %GREEN%!group_count!.%RESET% %%a
+        if not "%%a"=="" (
+            set /a group_count+=1
+            set "group_name_!group_count!=%%a"
+            echo %GREEN%    !group_count!.%RESET% %%a
+        )
     )
 ) else (
-    echo %YELLOW%Нет созданных групп%RESET%
+    echo %YELLOW%    Нет созданных групп%RESET%
+    pause
+    goto MANAGE_GROUPS
+)
+
+if !group_count!==0 (
+    echo %YELLOW%    Нет созданных групп%RESET%
     pause
     goto MANAGE_GROUPS
 )
 
 echo.
-set /p "group_num=%BOLD%%WHITE%Выберите номер группы: %RESET%"
+set /p "group_num=%BOLD%%WHITE%    ⚡ Выберите номер группы: %RESET%"
 set "selected_group=!group_name_%group_num%!"
 
 echo.
-echo %BOLD%%WHITE%Репозитории не в группах:%RESET%
+echo %BOLD%%WHITE%    Репозитории не в группах:%RESET%
 set repo_count=0
 for /f "usebackq tokens=1,* delims=;" %%a in ("%CONFIG_FILE%") do (
     set "in_group=0"
@@ -837,18 +900,18 @@ for /f "usebackq tokens=1,* delims=;" %%a in ("%CONFIG_FILE%") do (
     if !in_group!==0 (
         set /a repo_count+=1
         set "repo_name_add_!repo_count!=%%a"
-        echo %GREEN%!repo_count!.%RESET% %%a
+        echo %GREEN%    !repo_count!.%RESET% %%a
     )
 )
 
 if !repo_count!==0 (
-    echo %YELLOW%Нет репозиториев для добавления%RESET%
+    echo %YELLOW%    Нет репозиториев для добавления%RESET%
     pause
     goto MANAGE_GROUPS
 )
 
 echo.
-set /p "repo_num=%BOLD%%WHITE%Выберите номер репозитория: %RESET%"
+set /p "repo_num=%BOLD%%WHITE%    ⚡ Выберите номер репозитория: %RESET%"
 set "selected_repo=!repo_name_add_%repo_num%!"
 
 set "temp_groups=%TEMP%\groups.tmp"
@@ -856,7 +919,12 @@ type nul > "!temp_groups!"
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1,* delims=;" %%a in ("%GROUPS_FILE%") do (
         if "%%a"=="!selected_group!" (
-            echo %%a;%%b !selected_repo!>> "!temp_groups!"
+            :: Проверяем, не пустой ли список репозиториев
+            if "%%b"=="" (
+                echo %%a;!selected_repo!>> "!temp_groups!"
+            ) else (
+                echo %%a;%%b !selected_repo!>> "!temp_groups!"
+            )
         ) else (
             echo %%a;%%b>> "!temp_groups!"
         )
@@ -864,33 +932,36 @@ if exist "%GROUPS_FILE%" (
     move /y "!temp_groups!" "%GROUPS_FILE%" >nul 2>&1
 )
 
-echo %GREEN%Репозиторий "%selected_repo%" добавлен в группу "%selected_group%"%RESET%
+echo %GREEN%    ✅ Репозиторий "%selected_repo%" добавлен в группу "%selected_group%"%RESET%
 pause
 goto MANAGE_GROUPS
 
 :REMOVE_FROM_GROUP
 cls
-echo %BOLD%%CYAN%=== УДАЛЕНИЕ ИЗ ГРУППЫ ===%RESET%
+echo %BOLD%%CYAN%    🗑️ УДАЛЕНИЕ ИЗ ГРУППЫ%RESET%
 echo.
 
-echo %BOLD%%WHITE%Группы и их репозитории:%RESET%
+echo %BOLD%%WHITE%    Группы и их репозитории:%RESET%
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1,* delims=;" %%a in ("%GROUPS_FILE%") do (
-        echo.
-        echo %BOLD%%MAGENTA%Группа: %%a%RESET%
-        for %%r in (%%b) do (
-            echo   %GREEN%-%RESET% %%r
+        echo %BOLD%%MAGENTA%    📁 %%a%RESET%
+        if not "%%b"=="" (
+            for %%r in (%%b) do (
+                echo %GREEN%        -%RESET% %%r
+            )
+        ) else (
+            echo %YELLOW%        пусто%RESET%
         )
     )
 ) else (
-    echo %YELLOW%Нет групп%RESET%
+    echo %YELLOW%    Нет групп%RESET%
     pause
     goto MANAGE_GROUPS
 )
 
 echo.
-set /p "group_del=%BOLD%%WHITE%Введите название группы: %RESET%"
-set /p "repo_del=%BOLD%%WHITE%Введите название репозитория для удаления: %RESET%"
+set /p "group_del=%BOLD%%WHITE%    Введите название группы: %RESET%"
+set /p "repo_del=%BOLD%%WHITE%    Введите название репозитория для удаления: %RESET%"
 
 set "temp_groups=%TEMP%\groups.tmp"
 type nul > "!temp_groups!"
@@ -909,29 +980,29 @@ if exist "%GROUPS_FILE%" (
     move /y "!temp_groups!" "%GROUPS_FILE%" >nul 2>&1
 )
 
-echo %GREEN%Репозиторий удален из группы%RESET%
+echo %GREEN%    ✅ Репозиторий удален из группы%RESET%
 pause
 goto MANAGE_GROUPS
 
 :SHOW_GROUPS
 cls
-echo %BOLD%%CYAN%=== ВСЕ ГРУППЫ ===%RESET%
+echo %BOLD%%CYAN%    📚 ВСЕ ГРУППЫ%RESET%
 echo.
 
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1,2 delims=;" %%a in ("%GROUPS_FILE%") do (
-        echo %BOLD%%MAGENTA%[%%a]%RESET%
+        echo %BOLD%%MAGENTA%    [%%a]%RESET%
         if not "%%b"=="" (
             for %%r in (%%b) do (
-                echo   %GREEN%-%RESET% %%r
+                echo %GREEN%        -%RESET% %%r
             )
         ) else (
-            echo   %YELLOW%пусто%RESET%
+            echo %YELLOW%        пусто%RESET%
         )
         echo.
     )
 ) else (
-    echo %YELLOW%Нет созданных групп%RESET%
+    echo %YELLOW%    Нет созданных групп%RESET%
 )
 
 pause
@@ -939,21 +1010,21 @@ goto MANAGE_GROUPS
 
 :DELETE_GROUP
 cls
-echo %BOLD%%CYAN%=== УДАЛЕНИЕ ГРУППЫ ===%RESET%
+echo %BOLD%%CYAN%    🗑️ УДАЛЕНИЕ ГРУППЫ%RESET%
 echo.
 
 if exist "%GROUPS_FILE%" (
     for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
-        echo %GREEN%-%RESET% %%a
+        echo %GREEN%    -%RESET% %%a
     )
 ) else (
-    echo %YELLOW%Нет групп для удаления%RESET%
+    echo %YELLOW%    Нет групп для удаления%RESET%
     pause
     goto MANAGE_GROUPS
 )
 
 echo.
-set /p "group_del_name=%BOLD%%WHITE%Введите название группы для удаления: %RESET%"
+set /p "group_del_name=%BOLD%%WHITE%    Введите название группы для удаления: %RESET%"
 
 set "temp_groups=%TEMP%\groups.tmp"
 type nul > "!temp_groups!"
@@ -966,6 +1037,6 @@ if exist "%GROUPS_FILE%" (
     move /y "!temp_groups!" "%GROUPS_FILE%" >nul 2>&1
 )
 
-echo %GREEN%Группа удалена%RESET%
+echo %GREEN%    ✅ Группа удалена%RESET%
 pause
 goto MANAGE_GROUPS
