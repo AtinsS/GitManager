@@ -28,5 +28,14 @@ if errorlevel 1 (
 ) else (
     echo ✅ Коммит успешно создан!
 )
+
+:: Пушим репозиторий
+    echo Отправка изменений...
+    git push
+    if errorlevel 1 (
+        echo ❌ Ошибка при отправке!
+    ) else (
+        echo ✅ Изменения отправлены!
+    )
 echo.
 pause
