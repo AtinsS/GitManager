@@ -1,6 +1,6 @@
 # 🚀 Git Repository Manager by AtinsS
 
-**Version:** 1.1  
+**Version:** 1.1.1
 **Platform:** Windows  
 **Language:** Batch Script
 
