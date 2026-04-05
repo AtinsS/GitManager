@@ -1,42 +1,43 @@
 @echo off
 chcp 65001 >nul
+setlocal enabledelayedexpansion
 call "%~dp0utils.bat"
 
-echo 🔀 Переключение ветки для репозитория: %~1
-echo ==========================================
+cls
+echo %GREEN%🔀 Переключение ветки для репозитория: %~1%RESET%
+echo %WHITE%==========================================%RESET%
+echo.
 
-:: Показываем все ветки
-echo Доступные ветки:
+echo %WHITE%Доступные ветки:%RESET%
 echo ----------------
 git branch -a
 echo.
 
-:: Выбор ветки
-set /p "branch_name=Введите название ветки для переключения: "
+set /p "branch_name=%WHITE%Введите название ветки для переключения: %RESET%"
 
-:: Проверяем наличие неподтвержденных изменений
-git status --porcelain | findstr . >nul
-if errorlevel 0 (
-    echo ⚠ У вас есть неподтвержденные изменения!
-    set /p "stash=Спрятать их? (y/n): "
+:: Исправленная проверка (было errorlevel 0, нужно errorlevel 1)
+git status --porcelain | findstr . >nul 2>&1
+if not errorlevel 1 (
+    echo %YELLOW%⚠ У вас есть неподтвержденные изменения!%RESET%
+    set /p "stash=%YELLOW%Спрятать их? (y/n): %RESET%
     if /i "!stash!"=="y" (
         git stash
-        echo Изменения спрятаны
+        echo %GREEN%Изменения спрятаны%RESET%
+        set "stashed=1"
     )
 )
 
-:: Переключаемся
-git checkout !branch_name!
+git checkout !branch_name! 2>&1
 if errorlevel 1 (
-    echo ❌ Ошибка при переключении на ветку '!branch_name!'
+    echo %RED%❌ Ошибка при переключении на ветку '!branch_name!'%RESET%
 ) else (
-    echo ✅ Переключено на ветку '!branch_name!'
+    echo %GREEN%✅ Переключено на ветку '!branch_name!'%RESET%
     
-    :: Если были спрятаны изменения, предлагаем восстановить
-    if /i "!stash!"=="y" (
-        set /p "apply=Восстановить спрятанные изменения? (y/n): "
+    if defined stashed (
+        set /p "apply=%YELLOW%Восстановить спрятанные изменения? (y/n): %RESET%
         if /i "!apply!"=="y" (
             git stash pop
+            echo %GREEN%Изменения восстановлены%RESET%
         )
     )
 )

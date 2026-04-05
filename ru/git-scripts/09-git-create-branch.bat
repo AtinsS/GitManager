@@ -1,36 +1,35 @@
 @echo off
 chcp 65001 >nul
+setlocal enabledelayedexpansion
 call "%~dp0utils.bat"
 
-echo 🌿 Создание ветки для репозитория: %~1
-echo ======================================
-
-:: Показываем текущую ветку
-echo Текущая ветка:
+cls
+echo %GREEN%🌿 Создание ветки для репозитория: %~1%RESET%
+echo %WHITE%======================================%RESET%
+echo.
+echo %WHITE%Текущая ветка:%RESET%
 git branch --show-current
 echo.
 
-:: Создание новой ветки
-set /p "branch_name=Введите название новой ветки: "
+set /p "branch_name=%WHITE%Введите название новой ветки: %RESET%"
 if "!branch_name!"=="" (
-    echo ❌ Название ветки не может быть пустым!
+    echo %RED%❌ Название ветки не может быть пустым!%RESET%
     pause
-    goto :eof
+    exit /b 0
 )
 
-:: Проверяем, существует ли уже такая ветка
 git show-ref --verify --quiet refs/heads/!branch_name!
 if errorlevel 1 (
     git branch !branch_name!
-    echo ✅ Ветка '!branch_name!' создана!
+    echo %GREEN%✅ Ветка '!branch_name!' создана!%RESET%
     
-    set /p "switch=Переключиться на новую ветку? (y/n): "
+    set /p "switch=%YELLOW%Переключиться на новую ветку? (y/n): %RESET%"
     if /i "!switch!"=="y" (
         git checkout !branch_name!
-        echo Переключено на ветку '!branch_name!'
+        echo %GREEN%✅ Переключено на ветку '!branch_name!'%RESET%
     )
 ) else (
-    echo ❌ Ветка '!branch_name!' уже существует!
+    echo %RED%❌ Ветка '!branch_name!' уже существует!%RESET%
 )
 
 echo.

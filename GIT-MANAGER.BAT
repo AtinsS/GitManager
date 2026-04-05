@@ -15,12 +15,12 @@ set "EN_MAIN=%SCRIPT_DIR%en\GIT-MANAGER-EN.bat"
 
 :: Проверка Git
 where git >nul 2>nul || (
-    echo %YELLOW%Git не найден! Установите Git for Windows%RESET%
+    echo %YELLOW%Git not found! Please install Git for Windows: https://git-scm.com/%RESET%
     pause
     exit /b
 )
 
-:: Автоопределение языка (улучшенное)
+:: Автоопределение языка
 set "LANG=EN"
 
 :: Способ 1: Проверка через реестр (язык интерфейса)
