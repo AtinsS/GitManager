@@ -95,14 +95,16 @@ Now — just pick an action.
                          by AtinsS
 ════════════════════════════════════════════════════════════
 
-▸ REPOSITORIES
+▸ No repositories
 
 ════════════════════════════════════════════════════════════
 ▸ ACTIONS
-    [C] Clone         [A] Add         [U] Update all
-    [G] Groups        [D] Delete      [S] Settings
+    [C] Clone        [A] Add         [U] Update all
+    [G] Groups       [D] Delete      [S] Settings
     [X] Exit
 ════════════════════════════════════════════════════════════
+
+  →
 ```
 
 ---
