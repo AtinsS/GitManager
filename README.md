@@ -1,6 +1,6 @@
 # 🚀 Git Manager
 
-> Git without the pain. No commands. No extra steps.
+> A simple tool for managing multiple Git repositories without unnecessary commands
 
 **Platform:** Windows  
 **Language:** Batch Script
@@ -8,70 +8,38 @@
 ---
 
 [Russian REDME](https://github.com/AtinsS/GitManager/blob/main/README.ru.md)
-
-## 🚀 What is it?
-
-**Git Manager** is an interactive shell over Git that turns a complex CLI into a simple, menu-driven interface.
-
-Forget about typing this:
-
+## 💭 Why did I build this?
+I have multiple repositories and got tired of typing the same Git commands over and over:
 ```
 git add .
 git commit -m "fix"
 git push origin main
 ```
 
-Now — just pick an action.  
-**The tool handles the rest.**
+I wanted something simple: open it, pick an action, and it just works.
+That's how **🚀 Git Manager** was born.
 
 ---
+### 🧑‍💻 This is for you if:
 
-## ⚡ Why it's convenient
-
-- ⚡ **Faster** — routine tasks in a couple of clicks
-    
-- 🧠 **Simpler** — no need to memorize commands
-    
-- 📦 **More convenient** — all your repos in one place
-    
-- 🎯 **More practical** — fewer mistakes, more focus on code
-    
+- 📦 you juggle multiple repositories  
+- 😵 you're sick of typing the same Git commands  
+- ⚡ you want to commit + push in one click  
+- 🔘 you need to quickly update all your projects  
 
 ---
-
 ## 🧰 Features
 
 - 📁 Manage multiple repositories
-    
 - 📦 Organize projects into groups
-    
 - ⬆️ Commit + Push in one action
-    
-- ⬇️ Mass update all repos with a single button
-- 📊 Check repo status right from the main menu
-    
-- 🌿 Full branch management
-    
+- ⬇️ Mass-update all repositories with a single button
+- 📊 Repository status right in the menu
+- 🌿 Branch management
 - 🔄 Clone / Pull / Push without CLI
-    
-- 📜 View history (git log)
-    
+- 📜 View commit history (git log)
 - 🤖 Auto-commits on timer
-- 🌐 Auto language detection (currently: Russian & English)
-    
-
----
-
-## 🧑‍💻 Who is this for
-
-- Developers juggling multiple projects
-    
-- Anyone tired of Git CLI
-    
-- Beginners who want to get into Git fast
-    
-- Everyone who values their time
-    
+- 🌐 Multi-language support with auto-detection at launch (RU / EN)
 
 ---
 
@@ -83,11 +51,11 @@ Now — just pick an action.
     
 3. Run: `GIT-MANAGER.BAT`
 
-4. You're good to go 🎉
+4. Enjoy 🚀
 
 ---
 
-## 🖥️ What it looks like
+## 🖥️ Interface
 
 ### Main Menu
 
@@ -97,16 +65,17 @@ Now — just pick an action.
                          by AtinsS
 ════════════════════════════════════════════════════════════
 
-▸ No repositories
+▸ No repositories added
 
 ════════════════════════════════════════════════════════════
 ▸ ACTIONS
-    [C] Clone        [A] Add         [U] Update all
-    [G] Groups       [D] Delete      [S] Settings
+    [C] Clone         [A] Add         [U] Update all
+    [G] Groups        [D] Delete      [S] Settings
     [X] Exit
 ════════════════════════════════════════════════════════════
 
   →
+
 ```
 
 ---
@@ -114,43 +83,69 @@ Now — just pick an action.
 ### Working with Repositories
 
 ```batch
+════════════════════════════════════════════════════════════
+                        GIT MANAGER  🚀
+                         by AtinsS
+════════════════════════════════════════════════════════════
+
 ▸ Group: Group1
   1. Repo1  [dev] ● clean
 
 ▸ Group: Group2
   2. Repo2  [main] ● changes
   3. Repo3  [main] ● clean
+
+════════════════════════════════════════════════════════════
+▸ ACTIONS
+    [C] Clone         [A] Add         [U] Update all
+    [G] Groups        [D] Delete      [S] Settings
+    [X] Exit
+════════════════════════════════════════════════════════════
+
+  →
+
 ```
 
 ---
 
-### Actions Inside a Repository
+### Repository Actions Menu
 
 ```batch
-Repository: Repo1  Branch: dev
-Status: ✅ clean
+  ════════════════════════════════════════════════════════════
+  Repository: Repo1  Branch: dev
+  Status: ✅ clean
+  ════════════════════════════════════════════════════════════
 
-1. Git status
-2. Git pull
-3. Commit + Push
-4. Discard changes
-5. History (log)
-6. Merge
-7. Undo merge
-8. Branches for merge
-9. Create branch
-10. Switch branch
-11. Auto-commits
+  1. Git status (check current state)
+  2. Git pull (fetch updates)
+  3. Git add + commit + push (with message)
+  4. Open undo/rollback menu
+  5. View history (git log)
+  6. Git merge (merge branches)
+  7. Git merge --abort (cancel merge)
+  8. Show available branches for merge
+  9. Create new branch
+  10. Switch branch
+  11. Auto-commits (every N minutes)
+  12. Back to main menu
+
+ →
 ```
 
 ---
 
+### ❓ Why Batch Script?
+- no installation required
+- works out of the box
+- lightweight and fast
+
+___
 ## ☕ Support the Developer
 
-If **Git Manager** saved you time or proved useful,  
-you can support the project's development:
+If **Git Manager** saved you time or turned out to be useful, 
+and you'd like to support my work:
 
-- ⭐ Star the repository — it's free and helps the project grow
-- ☕ [Buy me a coffee](https://pay.cloudtips.ru/p/cbaa3c81) — for coffee, a bun, and a domain for future projects
+- ⭐ Star the repository
+- ☕ [Buy me a coffee](https://pay.cloudtips.ru/p/cbaa3c81) 
 
-Any support = more time for code and new features 🚀
+Any support = more motivation to keep building and improving projects.
