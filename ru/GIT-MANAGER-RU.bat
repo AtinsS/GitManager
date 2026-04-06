@@ -14,25 +14,25 @@ set "WHITE=%ESC%[97m"
 set "BOLD=%ESC%[1m"
 set "RESET=%ESC%[0m"
 
-:: Save script directory (where GIT-MANAGER-EN.bat is located)
+:: Save script directory
 set "SCRIPT_DIR=%~dp0"
 set "SCRIPT_DIR=%SCRIPT_DIR:~0,-1%"
 
-:: Parent directory (where GIT-MANAGER.BAT is located)
+:: Parent directory 
 set "PARENT_DIR=%SCRIPT_DIR%\.."
 
-:: Config directory (in parent folder)
+:: Config directory 
 set "CONFIG_DIR=%PARENT_DIR%\cfg"
 
 :: Create config directory if it doesn't exist
 if not exist "%CONFIG_DIR%" mkdir "%CONFIG_DIR%" 2>nul
 
-:: Config files (in cfg directory - shared between RU and EN versions)
+:: Config files 
 set "CONFIG_FILE=%CONFIG_DIR%\git_repos.cfg"
 set "GROUPS_FILE=%CONFIG_DIR%\groups.cfg"
 set "TEMP_FILE=%CONFIG_DIR%\temp.cfg"
 
-:: Scripts directory (in the same folder as GIT-MANAGER-EN.bat)
+:: Scripts directory 
 set "SCRIPTS_DIR=%SCRIPT_DIR%\git-scripts"
 
 
@@ -512,11 +512,9 @@ echo %GREEN%  ✅ Репозиторий успешно клонирован и 
 :: Спрашиваем про группу
 echo.
 echo %BOLD%%WHITE%  Добавление в группу:%RESET%
-set /p "add_to_group=%YELLOW%    Добавить репозиторий в группу? [д/н]: %RESET%"
+set /p "add_to_group=%YELLOW%    Добавить репозиторий в группу? [y/n]: %RESET%"
 
-if /i "!add_to_group!"=="д" call :ADD_REPO_TO_GROUP "%repo_name%"
 if /i "!add_to_group!"=="y" call :ADD_REPO_TO_GROUP "%repo_name%"
-if /i "!add_to_group!"=="да" call :ADD_REPO_TO_GROUP "%repo_name%"
 
 pause
 goto MENU
@@ -565,11 +563,9 @@ echo %GREEN%  ✅ Репозиторий добавлен в список!%RESET
 :: Спрашиваем про группу
 echo.
 echo %BOLD%%WHITE%  Добавление в группу:%RESET%
-set /p "add_to_group=%YELLOW%    Добавить репозиторий в группу? [д/н]: %RESET%"
+set /p "add_to_group=%YELLOW%    Добавить репозиторий в группу? [y/n]: %RESET%"
 
-if /i "!add_to_group!"=="д" call :ADD_REPO_TO_GROUP "%repo_name%"
 if /i "!add_to_group!"=="y" call :ADD_REPO_TO_GROUP "%repo_name%"
-if /i "!add_to_group!"=="да" call :ADD_REPO_TO_GROUP "%repo_name%"
 
 pause
 goto MENU
@@ -580,10 +576,8 @@ set "repo_to_add=%~1"
 :: Проверяем есть ли группы
 if not exist "%GROUPS_FILE%" (
   echo %YELLOW%  ⚠ Нет созданных групп. Хотите создать новую?%RESET%
-  set /p "create_new=%YELLOW%    [д/н]: %RESET%"
-  if /i "!create_new!"=="д" call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+  set /p "create_new=%YELLOW%    [y/n]: %RESET%"
   if /i "!create_new!"=="y" call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
-  if /i "!create_new!"=="да" call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
   goto :eof
 )
 
@@ -595,10 +589,8 @@ for /f "usebackq tokens=1 delims=;" %%a in ("%GROUPS_FILE%") do (
 
 if !group_exists!==0 (
   echo %YELLOW%  ⚠ Нет созданных групп. Хотите создать новую?%RESET%
-  set /p "create_new=%YELLOW%    [д/н]: %RESET%"
-  if /i "!create_new!"=="д" call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
+  set /p "create_new=%YELLOW%    [y/n]: %RESET%"
   if /i "!create_new!"=="y" call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
-  if /i "!create_new!"=="да" call :CREATE_GROUP_FROM_ADD "%repo_to_add%"
   goto :eof
 )
 
