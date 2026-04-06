@@ -7,6 +7,8 @@
 
 ---
 
+[Russian REDME](https://github.com/AtinsS/GitManager/blob/main/README.ru.md)
+
 ## 🚀 What is it?
 
 **Git Manager** is an interactive shell over Git that turns a complex CLI into a simple, menu-driven interface.
