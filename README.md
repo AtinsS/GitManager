@@ -127,11 +127,7 @@ That's how **🚀 Git Manager** was born.
   9. Create new branch
   10. Switch branch
   11. Auto-commits (every N minutes)
-<<<<<<< HEAD
   12. Back to main menu
-=======
-    0. Back to main menu
->>>>>>> 618255b0b7eab159e5a22125373da5a48e1f6bab
 
  →
 ```
